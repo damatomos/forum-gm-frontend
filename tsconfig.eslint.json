@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src", "*.ts"] // inclui vitest.config.ts e outros arquivos .ts na raiz
+}
