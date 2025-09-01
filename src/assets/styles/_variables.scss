@@ -11,6 +11,9 @@ $gm-c-blue-soft: #e9eaf4;
 
 $gm-c-red: #d97c8a;
 
+$gm-c-purple: #494d7e;
+$gm-c-purple-soft: #6c71b1;
+
 $gm-c-divider-light-1: #b2b2b2;
 $gm-c-divider-light-2: #767575;
 
@@ -72,15 +75,18 @@ $gm-c-secondary-font:
 
 $font-family: $gm-c-principal-font;
 $font-family-secondary: $gm-c-secondary-font;
+
+// Font Sizes
 $font-size-base: 16px;
 $font-size-sm: 14px;
 $font-size-lg: 18px;
 $font-size-xl: 20px;
 $font-size-2xl: 24px;
-$font-size-3xl: 30px;
-$font-size-4xl: 36px;
-$font-size-5xl: 48px;
-$font-size-6xl: 60px;
-$font-size-7xl: 72px;
-$font-size-8xl: 96px;
-$font-size-9xl: 128px;
+$font-size-3xl: 28px;
+$font-size-4xl: 32px;
+$font-size-5xl: 36px;
+$font-size-6xl: 48px;
+$font-size-7xl: 60px;
+$font-size-8xl: 72px;
+$font-size-9xl: 96px;
+$font-size-lg: 128px;
