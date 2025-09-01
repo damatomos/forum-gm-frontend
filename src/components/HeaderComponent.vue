@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ButtonBaseComponent from './ButtonBaseComponent.vue'
+import ButtonBaseComponent from './ButtonElasticComponent.vue'
 import GMPointIcon from './icons/GMPointIcon.vue'
 
 function handleSignIn() {
