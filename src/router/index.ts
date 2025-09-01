@@ -48,7 +48,7 @@ const router = createRouter({
       component: EditProfileView,
     },
     {
-      path: '*',
+      path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/404/NotFoundView.vue'),
     },
