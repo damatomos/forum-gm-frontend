@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ButtonBaseComponent from './ButtonElasticComponent.vue'
+import ButtonElasticComponent from './ButtonElasticComponent.vue'
 import GMPointIcon from './icons/GMPointIcon.vue'
 
 function handleSignIn() {
@@ -11,7 +11,7 @@ function handleSignIn() {
   <header class="header">
     <span class="logo">ForumGM</span>
     <span class="gm-points"> <GMPointIcon />850</span>
-    <ButtonBaseComponent title="Sign In" variant="primary" @click="handleSignIn" />
+    <ButtonElasticComponent title="Sign In" variant="primary" @click="handleSignIn" />
   </header>
 </template>
 
