@@ -74,6 +74,7 @@ label {
   }
 
   span {
+    font-size: $font-size-xs;
     color: $gm-c-divider-light-2;
     position: absolute;
     bottom: 0;
