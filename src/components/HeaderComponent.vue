@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import ButtonElasticComponent from './ButtonElasticComponent.vue'
 import GMPointIcon from './icons/GMPointIcon.vue'
 import { useUserStore } from '@/stores/user'
 
+const route = useRouter()
 const user = useUserStore()
 
 function handleSignIn() {
-  console.log('Clicked')
+  route.push({
+    name: 'login',
+  })
 }
 </script>
 

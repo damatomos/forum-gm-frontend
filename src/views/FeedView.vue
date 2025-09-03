@@ -1,12 +1,49 @@
 <script setup lang="ts">
+import CardTopicComponent from '@/components/CardTopicComponent.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import SkeletonComponent from '@/components/SkeletonComponent.vue'
 import TabComponent from '@/components/TabComponent.vue'
-import { ref } from 'vue'
+import { useTopicStore, type Topic } from '@/stores/topic'
+import gsap from 'gsap'
+import { onMounted, ref } from 'vue'
+
+const topicStore = useTopicStore()
+
+const loading = ref<boolean>(false)
+const topics = ref<Topic[]>([])
 
 const selectedTab = ref<number>(0)
 
-function selectTab(index: number) {
+async function loadTopics() {
+  loading.value = true
+  if (selectedTab.value === 0) {
+    topics.value = (await topicStore.fetchRelevantsTopics()).slice().reverse()
+  } else {
+    topics.value = await topicStore.fetchTopics()
+  }
+  loading.value = false
+
+  gsap.fromTo(
+    '.feed-content',
+    {
+      opacity: 0.5,
+    },
+    {
+      duration: 0.5,
+      ease: 'power1.out',
+      opacity: 1,
+    },
+  )
+}
+
+onMounted(async () => {
+  await loadTopics()
+})
+
+async function selectTab(index: number) {
+  if (selectedTab.value === index) return
   selectedTab.value = index
+  await loadTopics()
 }
 </script>
 
@@ -23,6 +60,12 @@ function selectTab(index: number) {
         <button class="add">+</button>
       </div>
     </header>
+    <section class="feed-content">
+      <template v-if="loading">
+        <SkeletonComponent v-for="topic in [1, 2, 3, 4, 5]" :key="topic" />
+      </template>
+      <CardTopicComponent v-else v-for="topic in topics" :key="topic.id" :topic="topic" />
+    </section>
   </main>
 </template>
 
@@ -40,6 +83,7 @@ function selectTab(index: number) {
   }
 
   @include media('mobile') {
+    padding: 100px 16px;
     .feed-actions {
       button {
         display: none;
@@ -83,6 +127,13 @@ function selectTab(index: number) {
         display: none;
       }
     }
+  }
+
+  .feed-content {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 }
 </style>
