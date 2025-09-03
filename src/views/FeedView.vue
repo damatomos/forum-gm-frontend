@@ -1,7 +1,19 @@
 <script setup lang="ts">
+import CardTopicComponent from '@/components/CardTopicComponent.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import TabComponent from '@/components/TabComponent.vue'
-import { ref } from 'vue'
+import { useTopicStore, type Topic } from '@/stores/topic'
+import { onMounted, ref } from 'vue'
+
+const topicStore = useTopicStore()
+
+const loading = ref<boolean>(true)
+const topics = ref<Topic[]>([])
+
+onMounted(async () => {
+  topics.value = await topicStore.fetchTopics()
+  loading.value = false
+})
 
 const selectedTab = ref<number>(0)
 
@@ -23,6 +35,10 @@ function selectTab(index: number) {
         <button class="add">+</button>
       </div>
     </header>
+    <section class="feed-content">
+      <div v-if="loading">Carregando tópicos...</div>
+      <CardTopicComponent v-else v-for="topic in topics" :key="topic.id" :topic="topic" />
+    </section>
   </main>
 </template>
 
@@ -40,6 +56,7 @@ function selectTab(index: number) {
   }
 
   @include media('mobile') {
+    padding: 100px 16px;
     .feed-actions {
       button {
         display: none;
@@ -83,6 +100,13 @@ function selectTab(index: number) {
         display: none;
       }
     }
+  }
+
+  .feed-content {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 }
 </style>

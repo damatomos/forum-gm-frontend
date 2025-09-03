@@ -4,7 +4,7 @@
     "title": "How make new friends?",
     "slug": "how-make-new-friends",
     "article": "# Its a title\nHello everyone, **how are you**?",
-    "timer": 7200,
+    "timer": 3600000,
     "tags": [
       { "id": 1, "content": "Meet", "slug": "meet" },
       { "id": 2, "content": "Only Talk", "slug": "only-talk" },
@@ -22,8 +22,8 @@
     "enabled": true,
     "count_answers": 0,
     "count_comment": 0,
-    "created_at": "2025-08-27T04:32:15Z",
-    "updated_at": "2025-08-27T22:00:00Z"
+    "created_at": "2025-09-04T04:32:15",
+    "updated_at": "2025-09-04T22:00:00"
   },
   {
     "id": "a1b2c3d4-1234-5678-9876-abcdef123456",
@@ -47,8 +47,8 @@
     "enabled": true,
     "count_answers": 2,
     "count_comment": 3,
-    "created_at": "2025-08-28T10:15:00Z",
-    "updated_at": "2025-08-28T12:45:00Z"
+    "created_at": "2025-09-04T10:15:00",
+    "updated_at": "2025-09-04T12:45:00"
   },
   {
     "id": "b2c3d4e5-2345-6789-8765-bcdef2345678",
@@ -72,8 +72,8 @@
     "enabled": true,
     "count_answers": 1,
     "count_comment": 1,
-    "created_at": "2025-08-29T08:00:00Z",
-    "updated_at": "2025-08-29T09:30:00Z"
+    "created_at": "2025-09-04T08:00:00",
+    "updated_at": "2025-09-04T09:30:00"
   },
   {
     "id": "c3d4e5f6-3456-7890-7654-cdef34567890",
@@ -97,8 +97,8 @@
     "enabled": true,
     "count_answers": 3,
     "count_comment": 4,
-    "created_at": "2025-08-27T16:30:00Z",
-    "updated_at": "2025-08-27T18:00:00Z"
+    "created_at": "2025-09-04T16:30:00",
+    "updated_at": "2025-09-04T18:00:00"
   },
   {
     "id": "d4e5f6g7-4567-8901-6543-def456789012",
@@ -122,8 +122,8 @@
     "enabled": true,
     "count_answers": 0,
     "count_comment": 2,
-    "created_at": "2025-08-26T14:20:00Z",
-    "updated_at": "2025-08-26T15:00:00Z"
+    "created_at": "2025-09-04T14:20:00",
+    "updated_at": "2025-09-04T15:00:00"
   },
   {
     "id": "e5f6g7h8-5678-9012-5432-ef5678901234",
@@ -147,8 +147,8 @@
     "enabled": true,
     "count_answers": 4,
     "count_comment": 5,
-    "created_at": "2025-08-25T09:00:00Z",
-    "updated_at": "2025-08-25T11:30:00Z"
+    "created_at": "2025-09-04T09:00:00",
+    "updated_at": "2025-09-04T11:30:00"
   },
   {
     "id": "f6g7h8i9-6789-0123-4321-f67890123456",
@@ -172,8 +172,8 @@
     "enabled": true,
     "count_answers": 2,
     "count_comment": 3,
-    "created_at": "2025-08-24T13:45:00Z",
-    "updated_at": "2025-08-24T15:10:00Z"
+    "created_at": "2025-09-04T13:45:00",
+    "updated_at": "2025-09-04T15:10:00"
   },
   {
     "id": "g7h8i9j0-7890-1234-3210-678901234567",
@@ -197,8 +197,8 @@
     "enabled": true,
     "count_answers": 1,
     "count_comment": 2,
-    "created_at": "2025-08-23T07:20:00Z",
-    "updated_at": "2025-08-23T09:00:00Z"
+    "created_at": "2025-09-04T07:20:00",
+    "updated_at": "2025-09-04T09:00:00"
   },
   {
     "id": "h8i9j0k1-8901-2345-2109-789012345678",
@@ -217,13 +217,13 @@
       "photo_url": "https://picsum.photos/200?random=8"
     },
     "answers": [],
-    "count_heart": 25,
+    "count_heart": 1023000,
     "count_raiden": 4,
     "enabled": true,
     "count_answers": 6,
-    "count_comment": 8,
-    "created_at": "2025-08-22T21:00:00Z",
-    "updated_at": "2025-08-22T23:15:00Z"
+    "count_comment": 212023000,
+    "created_at": "2025-09-22T21:00:00",
+    "updated_at": "2025-09-22T23:15:00"
   },
   {
     "id": "i9j0k1l2-9012-3456-1098-890123456789",
@@ -247,7 +247,7 @@
     "enabled": true,
     "count_answers": 2,
     "count_comment": 2,
-    "created_at": "2025-08-21T12:00:00Z",
-    "updated_at": "2025-08-21T14:00:00Z"
+    "created_at": "2025-09-05T12:00:00",
+    "updated_at": "2025-09-05T14:00:00"
   }
 ]
