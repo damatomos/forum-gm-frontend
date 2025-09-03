@@ -1,6 +1,10 @@
 // Color Variables
 $gm-c-black: #000000;
 $gm-c-black-soft: #1a1a1a;
+
+$gm-c-grey: #e1e1e2;
+$gm-c-grey-dark: #c4c4c4;
+
 $gm-c-white: #ffffff;
 $gm-c-white-soft: #fbf5ef;
 
@@ -10,6 +14,7 @@ $gm-c-yellow-soft: #feab3f;
 $gm-c-blue-soft: #e9eaf4;
 
 $gm-c-red: #d97c8a;
+$gm-c-red-dark: #c56271;
 
 $gm-c-purple: #494d7e;
 $gm-c-purple-soft: #6c71b1;
@@ -39,6 +44,9 @@ $color-border-active: $gm-c-divider-light-2;
 $color-heading: $gm-c-text-light-2;
 $color-text: $gm-c-text-light-1;
 $color-text-disabled: $gm-c-text-light-3;
+
+$color-tab-enabled: $gm-c-black;
+$color-tab-disabled: $gm-c-grey-dark;
 
 $section-gap: 160px;
 
