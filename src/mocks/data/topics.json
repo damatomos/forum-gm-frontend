@@ -1,0 +1,253 @@
+[
+  {
+    "id": "98a05fa7-7e90-43ec-a1e0-dc1e5d834158",
+    "title": "How make new friends?",
+    "slug": "how-make-new-friends",
+    "article": "# Its a title\nHello everyone, **how are you**?",
+    "timer": 7200,
+    "tags": [
+      { "id": 1, "content": "Meet", "slug": "meet" },
+      { "id": 2, "content": "Only Talk", "slug": "only-talk" },
+      { "id": 5, "content": "Hello Everyone", "slug": "hello-everyone" }
+    ],
+    "user": {
+      "name": "Beatriz Santos",
+      "username": "biatriz",
+      "gmp": 35,
+      "photo_url": "https://imagem.com"
+    },
+    "answers": [],
+    "count_heart": 0,
+    "count_raiden": 0,
+    "enabled": true,
+    "count_answers": 0,
+    "count_comment": 0,
+    "created_at": "2025-08-27T04:32:15Z",
+    "updated_at": "2025-08-27T22:00:00Z"
+  },
+  {
+    "id": "a1b2c3d4-1234-5678-9876-abcdef123456",
+    "title": "Best tips for learning programming?",
+    "slug": "best-tips-learning-programming",
+    "article": "I started coding recently, any **tips** for beginners?",
+    "timer": 3600,
+    "tags": [
+      { "id": 3, "content": "Learning", "slug": "learning" },
+      { "id": 4, "content": "Programming", "slug": "programming" }
+    ],
+    "user": {
+      "name": "Carlos Almeida",
+      "username": "carlosdev",
+      "gmp": 50,
+      "photo_url": "https://picsum.photos/200?random=1"
+    },
+    "answers": [],
+    "count_heart": 10,
+    "count_raiden": 1,
+    "enabled": true,
+    "count_answers": 2,
+    "count_comment": 3,
+    "created_at": "2025-08-28T10:15:00Z",
+    "updated_at": "2025-08-28T12:45:00Z"
+  },
+  {
+    "id": "b2c3d4e5-2345-6789-8765-bcdef2345678",
+    "title": "How to stay motivated?",
+    "slug": "how-to-stay-motivated",
+    "article": "What do you do to keep your motivation **high**?",
+    "timer": 5400,
+    "tags": [
+      { "id": 6, "content": "Motivation", "slug": "motivation" },
+      { "id": 7, "content": "Habits", "slug": "habits" }
+    ],
+    "user": {
+      "name": "Ana Paula",
+      "username": "aninha",
+      "gmp": 18,
+      "photo_url": "https://picsum.photos/200?random=2"
+    },
+    "answers": [],
+    "count_heart": 8,
+    "count_raiden": 0,
+    "enabled": true,
+    "count_answers": 1,
+    "count_comment": 1,
+    "created_at": "2025-08-29T08:00:00Z",
+    "updated_at": "2025-08-29T09:30:00Z"
+  },
+  {
+    "id": "c3d4e5f6-3456-7890-7654-cdef34567890",
+    "title": "Best places to travel alone?",
+    "slug": "best-places-travel-alone",
+    "article": "Looking for safe and fun places to travel **solo** ✈️",
+    "timer": 4800,
+    "tags": [
+      { "id": 8, "content": "Travel", "slug": "travel" },
+      { "id": 9, "content": "Solo", "slug": "solo" }
+    ],
+    "user": {
+      "name": "Lucas Martins",
+      "username": "lucasm",
+      "gmp": 72,
+      "photo_url": "https://picsum.photos/200?random=3"
+    },
+    "answers": [],
+    "count_heart": 15,
+    "count_raiden": 2,
+    "enabled": true,
+    "count_answers": 3,
+    "count_comment": 4,
+    "created_at": "2025-08-27T16:30:00Z",
+    "updated_at": "2025-08-27T18:00:00Z"
+  },
+  {
+    "id": "d4e5f6g7-4567-8901-6543-def456789012",
+    "title": "How to improve focus?",
+    "slug": "how-to-improve-focus",
+    "article": "I get distracted a lot, how do you **stay focused**?",
+    "timer": 3000,
+    "tags": [
+      { "id": 10, "content": "Focus", "slug": "focus" },
+      { "id": 11, "content": "Productivity", "slug": "productivity" }
+    ],
+    "user": {
+      "name": "Juliana Costa",
+      "username": "julicosta",
+      "gmp": 41,
+      "photo_url": "https://picsum.photos/200?random=4"
+    },
+    "answers": [],
+    "count_heart": 6,
+    "count_raiden": 0,
+    "enabled": true,
+    "count_answers": 0,
+    "count_comment": 2,
+    "created_at": "2025-08-26T14:20:00Z",
+    "updated_at": "2025-08-26T15:00:00Z"
+  },
+  {
+    "id": "e5f6g7h8-5678-9012-5432-ef5678901234",
+    "title": "Favorite books recommendations?",
+    "slug": "favorite-books-recommendations",
+    "article": "Share your **favorite books** 📚",
+    "timer": 6000,
+    "tags": [
+      { "id": 12, "content": "Books", "slug": "books" },
+      { "id": 13, "content": "Reading", "slug": "reading" }
+    ],
+    "user": {
+      "name": "Marcos Vinícius",
+      "username": "marquinhos",
+      "gmp": 22,
+      "photo_url": "https://picsum.photos/200?random=5"
+    },
+    "answers": [],
+    "count_heart": 12,
+    "count_raiden": 1,
+    "enabled": true,
+    "count_answers": 4,
+    "count_comment": 5,
+    "created_at": "2025-08-25T09:00:00Z",
+    "updated_at": "2025-08-25T11:30:00Z"
+  },
+  {
+    "id": "f6g7h8i9-6789-0123-4321-f67890123456",
+    "title": "Any advice for public speaking?",
+    "slug": "advice-for-public-speaking",
+    "article": "I get nervous when speaking in public, any **advice**?",
+    "timer": 4200,
+    "tags": [
+      { "id": 14, "content": "Speaking", "slug": "speaking" },
+      { "id": 15, "content": "Confidence", "slug": "confidence" }
+    ],
+    "user": {
+      "name": "Fernanda Lima",
+      "username": "ferlima",
+      "gmp": 65,
+      "photo_url": "https://picsum.photos/200?random=6"
+    },
+    "answers": [],
+    "count_heart": 18,
+    "count_raiden": 2,
+    "enabled": true,
+    "count_answers": 2,
+    "count_comment": 3,
+    "created_at": "2025-08-24T13:45:00Z",
+    "updated_at": "2025-08-24T15:10:00Z"
+  },
+  {
+    "id": "g7h8i9j0-7890-1234-3210-678901234567",
+    "title": "Healthy morning routines?",
+    "slug": "healthy-morning-routines",
+    "article": "What are your **morning routines** for a productive day?",
+    "timer": 3600,
+    "tags": [
+      { "id": 16, "content": "Health", "slug": "health" },
+      { "id": 17, "content": "Routine", "slug": "routine" }
+    ],
+    "user": {
+      "name": "Pedro Henrique",
+      "username": "phdev",
+      "gmp": 30,
+      "photo_url": "https://picsum.photos/200?random=7"
+    },
+    "answers": [],
+    "count_heart": 7,
+    "count_raiden": 0,
+    "enabled": true,
+    "count_answers": 1,
+    "count_comment": 2,
+    "created_at": "2025-08-23T07:20:00Z",
+    "updated_at": "2025-08-23T09:00:00Z"
+  },
+  {
+    "id": "h8i9j0k1-8901-2345-2109-789012345678",
+    "title": "Best coding music?",
+    "slug": "best-coding-music",
+    "article": "What **music** do you listen to while coding?",
+    "timer": 2400,
+    "tags": [
+      { "id": 18, "content": "Music", "slug": "music" },
+      { "id": 19, "content": "Coding", "slug": "coding" }
+    ],
+    "user": {
+      "name": "Gabriel Rocha",
+      "username": "gabirocha",
+      "gmp": 80,
+      "photo_url": "https://picsum.photos/200?random=8"
+    },
+    "answers": [],
+    "count_heart": 25,
+    "count_raiden": 4,
+    "enabled": true,
+    "count_answers": 6,
+    "count_comment": 8,
+    "created_at": "2025-08-22T21:00:00Z",
+    "updated_at": "2025-08-22T23:15:00Z"
+  },
+  {
+    "id": "i9j0k1l2-9012-3456-1098-890123456789",
+    "title": "Tips for remote work?",
+    "slug": "tips-for-remote-work",
+    "article": "How do you stay **productive** working from home?",
+    "timer": 5000,
+    "tags": [
+      { "id": 20, "content": "Remote Work", "slug": "remote-work" },
+      { "id": 21, "content": "Productivity", "slug": "productivity" }
+    ],
+    "user": {
+      "name": "Isabela Ferreira",
+      "username": "isafer",
+      "gmp": 47,
+      "photo_url": "https://picsum.photos/200?random=9"
+    },
+    "answers": [],
+    "count_heart": 9,
+    "count_raiden": 1,
+    "enabled": true,
+    "count_answers": 2,
+    "count_comment": 2,
+    "created_at": "2025-08-21T12:00:00Z",
+    "updated_at": "2025-08-21T14:00:00Z"
+  }
+]
