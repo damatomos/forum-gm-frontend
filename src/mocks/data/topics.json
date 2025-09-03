@@ -205,7 +205,7 @@
     "title": "Best coding music?",
     "slug": "best-coding-music",
     "article": "What **music** do you listen to while coding?",
-    "timer": 2400,
+    "timer": 10402400,
     "tags": [
       { "id": 18, "content": "Music", "slug": "music" },
       { "id": 19, "content": "Coding", "slug": "coding" }
@@ -222,8 +222,8 @@
     "enabled": true,
     "count_answers": 6,
     "count_comment": 212023000,
-    "created_at": "2025-09-22T21:00:00",
-    "updated_at": "2025-09-22T23:15:00"
+    "created_at": "2025-09-03T21:00:00",
+    "updated_at": "2025-09-03T23:15:00"
   },
   {
     "id": "i9j0k1l2-9012-3456-1098-890123456789",

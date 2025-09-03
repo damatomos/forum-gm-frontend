@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import CardTopicComponent from '@/components/CardTopicComponent.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import SkeletonComponent from '@/components/SkeletonComponent.vue'
 import TabComponent from '@/components/TabComponent.vue'
 import { useTopicStore, type Topic } from '@/stores/topic'
+import gsap from 'gsap'
 import { onMounted, ref } from 'vue'
 
 const topicStore = useTopicStore()
@@ -20,6 +22,18 @@ async function loadTopics() {
     topics.value = await topicStore.fetchTopics()
   }
   loading.value = false
+
+  gsap.fromTo(
+    '.feed-content',
+    {
+      opacity: 0.5,
+    },
+    {
+      duration: 0.5,
+      ease: 'power1.out',
+      opacity: 1,
+    },
+  )
 }
 
 onMounted(async () => {
@@ -27,6 +41,7 @@ onMounted(async () => {
 })
 
 async function selectTab(index: number) {
+  if (selectedTab.value === index) return
   selectedTab.value = index
   await loadTopics()
 }
@@ -46,7 +61,9 @@ async function selectTab(index: number) {
       </div>
     </header>
     <section class="feed-content">
-      <div v-if="loading">Carregando tópicos...</div>
+      <template v-if="loading">
+        <SkeletonComponent v-for="topic in [1, 2, 3, 4, 5]" :key="topic" />
+      </template>
       <CardTopicComponent v-else v-for="topic in topics" :key="topic.id" :topic="topic" />
     </section>
   </main>
