@@ -7,18 +7,28 @@ import { onMounted, ref } from 'vue'
 
 const topicStore = useTopicStore()
 
-const loading = ref<boolean>(true)
+const loading = ref<boolean>(false)
 const topics = ref<Topic[]>([])
-
-onMounted(async () => {
-  topics.value = await topicStore.fetchTopics()
-  loading.value = false
-})
 
 const selectedTab = ref<number>(0)
 
-function selectTab(index: number) {
+async function loadTopics() {
+  loading.value = true
+  if (selectedTab.value === 0) {
+    topics.value = (await topicStore.fetchRelevantsTopics()).slice().reverse()
+  } else {
+    topics.value = await topicStore.fetchTopics()
+  }
+  loading.value = false
+}
+
+onMounted(async () => {
+  await loadTopics()
+})
+
+async function selectTab(index: number) {
   selectedTab.value = index
+  await loadTopics()
 }
 </script>
 

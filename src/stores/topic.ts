@@ -42,5 +42,15 @@ export const useTopicStore = defineStore('topic', () => {
     return topics.value || []
   }
 
-  return { countTopics, fetchTopics, topics }
+  async function fetchRelevantsTopics() {
+    const res = await api.get(`/topic?relevant=true`)
+
+    if (res.status === 200) {
+      topics.value = res.data
+    }
+
+    return topics.value || []
+  }
+
+  return { countTopics, fetchTopics, topics, fetchRelevantsTopics }
 })

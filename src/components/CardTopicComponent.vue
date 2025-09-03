@@ -109,7 +109,11 @@ onUnmounted(() => {
   align-items: center;
   padding: 32px 24px;
 
-  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.12);
+  }
 
   .card-content {
     flex: 1;
