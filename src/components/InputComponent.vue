@@ -3,7 +3,7 @@ import { ref } from 'vue'
 interface Props {
   label?: string
   id?: string
-  variant?: 'one' | 'two' | 'three'
+  variant?: 'auth' | 'send' | 'common-number' | 'common'
   placeholder?: string
   maxLength?: number | string
 }
@@ -17,14 +17,14 @@ const props = defineProps<Props>()
   <div class="container-input">
     <input
       v-model="textInput"
-      :class="[variant ? variant : 'one']"
+      :class="[variant ? variant : 'common']"
       type="text"
       :placeholder="placeholder"
       :maxlength="maxLength"
       :id="props.id"
     />
-    <img v-if="props.variant === 'two'" src="/icons/PaperPlaneRight.svg" alt="button push" />
-    <span v-if="props.variant === 'three'">{{ textInput.length }}/{{ maxLength }}</span>
+    <img v-if="props.variant === 'send'" src="/icons/PaperPlaneRight.svg" alt="button push" />
+    <span v-if="props.variant === 'common-number'">{{ textInput.length }}/{{ maxLength }}</span>
   </div>
 </template>
 
@@ -45,22 +45,26 @@ label {
     font-size: $font-size-xl;
     color: $gm-c-divider-light-2;
     background-color: $gm-c-white-soft;
-    border-style: none;
+    border: 1px solid $gm-c-divider-light-2;
     outline: none;
     border-radius: 6px;
     position: relative;
   }
 
-  .one {
+  .common {
     padding: 0.625rem 1rem;
   }
 
-  .two {
+  .auth {
+    padding: 0.625rem 1rem;
+    border: none;
+  }
+
+  .send {
     padding: 0.625rem 3rem 0.625rem 1rem;
   }
 
-  .three {
-    border: 1px solid $gm-c-divider-light-2;
+  .common-number {
     padding: 0.625rem 4rem 0.625rem 1rem;
   }
 
