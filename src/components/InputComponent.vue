@@ -6,6 +6,7 @@ interface Props {
   variant?: 'auth' | 'send' | 'common-number' | 'common'
   placeholder?: string
   maxLength?: number | string
+  type: string
 }
 
 const textInput = ref('')
@@ -18,7 +19,7 @@ const props = defineProps<Props>()
     <input
       v-model="textInput"
       :class="[variant ? variant : 'common']"
-      type="text"
+      :type="type"
       :placeholder="placeholder"
       :maxlength="maxLength"
       :id="props.id"
