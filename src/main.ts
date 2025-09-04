@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import { useGuards } from './guard/useGuards'
 
 async function bootstrap() {
   if (import.meta.env.MODE === 'development') {
@@ -16,6 +17,7 @@ async function bootstrap() {
   const app = createApp(App)
 
   app.use(createPinia())
+  router.beforeEach(useGuards)
   app.use(router)
 
   app.mount('#app')
