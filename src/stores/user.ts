@@ -1,6 +1,4 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { removeToken } from '@/utils/auth/token'
 import api from '@/utils/api'
 
 export interface User {
@@ -17,32 +15,14 @@ export interface AuthUser {
 }
 
 export const useUserStore = defineStore('user', () => {
-  const token = ref<string | null>(null)
-  const user = ref<User | null>(null)
-  const isLogged = computed(() => !!token.value)
-
-  async function login(username: string, password: string): Promise<boolean> {
-    const res = await api.post<AuthUser>('/auth/login', { username, password })
+  async function fetchUser(): Promise<User | null> {
+    const res = await api.get('/user')
 
     if (res.status === 200) {
-      token.value = res.data.access_token
-      user.value = res.data.user
-      return true
+      return res.data
     }
-    return false
+    return null
   }
 
-  async function fetchUser() {
-    if (!token.value) return
-    const res = await api.get('/user')
-    user.value = res.data
-  }
-
-  function logout() {
-    token.value = null
-    user.value = null
-    removeToken()
-  }
-
-  return { token, user, isLogged, logout, login, fetchUser }
+  return { fetchUser }
 })

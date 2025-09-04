@@ -16,11 +16,19 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue'),
+      meta: {
+        requiresAuth: false,
+        guestOnly: true,
+      },
     },
     {
       path: '/register',
       name: 'register',
       component: () => import('@/views/RegisterView.vue'),
+      meta: {
+        requiresAuth: false,
+        guestOnly: true,
+      },
     },
     {
       path: '/topic/:id',
@@ -36,16 +44,23 @@ const router = createRouter({
       path: '/topic/:id/edit',
       name: 'edit-topic',
       component: EditTopicView,
-    },
-    {
-      path: '/profile/:username',
-      name: 'profile',
-      component: () => import('@/views/ProfileView.vue'),
+      meta: {
+        requiresAuth: true,
+        requiresOwner: true,
+      },
     },
     {
       path: '/profile',
       name: 'edit-profile',
       component: EditProfileView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/profile/:username',
+      name: 'profile-view',
+      component: () => import('@/views/ProfileView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
