@@ -28,12 +28,35 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
       id="password-register"
     />
     <ButtonSimpleComponent class="btn-login" variant="button-auth" content="Cadastrar" />
-    <p>Já possui uma conta? <a href="LoginView.vue">registre-se.</a></p>
+    <p>Já possui uma conta? <a href="LoginView.vue">clique aqui.</a></p>
   </div>
 </template>
 
 <style scoped lang="scss">
-  .container-register {
-    @include style-login-and-register;
+.container-register {
+  @include style-login-and-register;
+  h1 {
+    @include text-center-white;
+    font-size: $font-size-5xl;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
   }
+
+  :deep(#nome-register),
+  :deep(#email-register) {
+    margin-bottom: 1.5rem;
+  }
+
+  :deep(#password-register) {
+    margin-bottom: 3rem;
+  }
+
+  .btn-login {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    @include link-login-and-register;
+  }
+}
 </style>
