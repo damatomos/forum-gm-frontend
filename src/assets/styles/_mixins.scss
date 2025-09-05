@@ -19,3 +19,8 @@
     }
   }
 }
+
+@mixin text-center-white {
+  text-align: center;
+  color: $gm-c-white;
+}

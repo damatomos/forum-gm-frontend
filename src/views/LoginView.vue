@@ -25,11 +25,6 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
 </template>
 
 <style scoped lang="scss">
-@mixin text-center-white {
-  text-align: center;
-  color: $gm-c-white;
-}
-
 .container-login {
   border-radius: 0.625rem;
   padding: 5rem 1.5rem 2.25rem 1.5rem;
