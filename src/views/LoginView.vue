@@ -14,7 +14,6 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
       id="email-login"
     />
     <InputComponent
-      class="input-senha"
       label="Password"
       type="password"
       variant="auth"
@@ -25,4 +24,44 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@mixin text-center-white {
+  text-align: center;
+  color: $gm-c-white;
+}
+
+.container-login {
+  border-radius: 0.625rem;
+  padding: 5rem 1.5rem 2.25rem 1.5rem;
+  width: 500px;
+  background: $gm-c-purple-dark;
+
+  h1 {
+    @include text-center-white;
+    font-size: $font-size-5xl;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+
+  :deep(#email-login) {
+    margin-bottom: 1.5rem;
+  }
+
+  :deep(#password-login) {
+    margin-bottom: 3rem;
+  }
+
+  .btn-login {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    @include text-center-white;
+    line-height: 120%;
+    font-size: $font-size-base;
+    a {
+      color: $gm-c-yellow;
+    }
+  }
+}
+</style>
