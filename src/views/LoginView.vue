@@ -13,12 +13,7 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
       placeholder="Seu melhor email"
       id="email-login"
     />
-    <InputComponent
-      label="Password"
-      type="password"
-      variant="auth"
-      id="password-login"
-    />
+    <InputComponent label="Password" type="password" variant="auth" id="password-login" />
     <ButtonSimpleComponent class="btn-login" variant="button-auth" content="Entrar" />
     <p>Não possui uma conta? <a href="RegisterView.vue">registre-se.</a></p>
   </div>
@@ -26,10 +21,7 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
 
 <style scoped lang="scss">
 .container-login {
-  border-radius: 0.625rem;
-  padding: 5rem 1.5rem 2.25rem 1.5rem;
-  width: 500px;
-  background: $gm-c-purple-dark;
+  @include style-login-and-register;
 
   h1 {
     @include text-center-white;
@@ -51,12 +43,7 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
   }
 
   p {
-    @include text-center-white;
-    line-height: 120%;
-    font-size: $font-size-base;
-    a {
-      color: $gm-c-yellow;
-    }
+    @include link-login-and-register;
   }
 }
 </style>

@@ -4,7 +4,7 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
 </script>
 
 <template>
-  <div class="container-login">
+  <div class="container-register">
     <h1>Registre-se</h1>
     <InputComponent
       label="Nome"
@@ -32,4 +32,8 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .container-register {
+    @include style-login-and-register;
+  }
+</style>

@@ -26,3 +26,19 @@
   text-align: center;
   color: $gm-c-white;
 }
+
+@mixin style-login-and-register {
+  border-radius: 0.625rem;
+  padding: 5rem 1.5rem 2.25rem 1.5rem;
+  width: 500px;
+  background: $gm-c-purple-dark;
+}
+
+@mixin link-login-and-register {
+  @include text-center-white;
+  line-height: 120%;
+  font-size: $font-size-base;
+  a {
+    color: $gm-c-yellow;
+  }
+}
