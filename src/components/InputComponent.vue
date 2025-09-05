@@ -14,7 +14,7 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <label :for="props.id">{{ label }}</label>
+  <label :for="props.id" :class="{ 'label-auth': props.variant == 'auth' }">{{ label }}</label>
   <div class="container-input">
     <input
       v-model="textInput"
@@ -35,6 +35,10 @@ label {
   font-size: $font-family;
   font-size: $font-size-xl;
   margin-bottom: 0.625rem;
+}
+
+.label-auth {
+  color: $gm-c-yellow;
 }
 
 .container-input {
