@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 interface Props {
+  width?: string | number
   label?: string
   id?: string
   variant?: 'auth' | 'send' | 'common-number' | 'common'
@@ -15,7 +16,7 @@ const props = defineProps<Props>()
 
 <template>
   <label :for="props.id" :class="{ 'label-auth': props.variant == 'auth' }">{{ label }}</label>
-  <div class="container-input">
+  <div class="container-input" :style="{ width: `${props.width}px` || '100%'}">
     <input
       v-model="textInput"
       :class="[variant ? variant : 'common']"
@@ -42,7 +43,6 @@ label {
 }
 
 .container-input {
-  max-width: fit-content;
   position: relative;
 
   input {
