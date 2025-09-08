@@ -3,24 +3,26 @@ import CardTopicComponent from '@/components/CardTopicComponent.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import SkeletonComponent from '@/components/SkeletonComponent.vue'
 import TabComponent from '@/components/TabComponent.vue'
-import { useTopicStore, type Topic } from '@/stores/topic'
+import { useTopicStore, type TopicPage } from '@/stores/topic'
 import gsap from 'gsap'
 import { onMounted, ref } from 'vue'
 
 const topicStore = useTopicStore()
 
 const loading = ref<boolean>(false)
-const topics = ref<Topic[]>([])
+const topicPage = ref<TopicPage | null>(null)
 
 const selectedTab = ref<number>(0)
 
 async function loadTopics() {
   loading.value = true
   if (selectedTab.value === 0) {
-    topics.value = (await topicStore.fetchRelevantsTopics()).slice().reverse()
+    topicPage.value = await topicStore.fetchRelevantsTopics()
   } else {
-    topics.value = await topicStore.fetchTopics()
+    topicPage.value = await topicStore.fetchTopics({ page: 0 })
   }
+
+  console.log(topicPage)
   loading.value = false
 
   gsap.fromTo(
@@ -61,10 +63,15 @@ async function selectTab(index: number) {
       </div>
     </header>
     <section class="feed-content">
-      <template v-if="loading">
+      <template v-if="loading || !topicPage">
         <SkeletonComponent v-for="topic in [1, 2, 3, 4, 5]" :key="topic" />
       </template>
-      <CardTopicComponent v-else v-for="topic in topics" :key="topic.id" :topic="topic" />
+      <CardTopicComponent
+        v-else
+        v-for="topic in topicPage?.content"
+        :key="topic.id"
+        :topic="topic"
+      />
     </section>
   </main>
 </template>

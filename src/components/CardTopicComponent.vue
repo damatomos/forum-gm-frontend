@@ -32,6 +32,7 @@ const timerToString = (time: number) => {
   ].join(':')
 }
 
+const timeLeft = ref(getCurrentTime())
 const timer = ref<string>(timerToString(getCurrentTime()))
 
 let interval: number
@@ -39,6 +40,8 @@ let interval: number
 onMounted(() => {
   interval = window.setInterval(() => {
     const currentTime = getCurrentTime()
+    timeLeft.value = currentTime
+
     if (currentTime <= 0) {
       timer.value = '00:00:00'
       clearInterval(interval)
@@ -54,7 +57,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <RouterLink :to="`/topic/${topic.id}`" v-if="getCurrentTime() >= 0">
+  <RouterLink :to="`/topic/${topic.id}`" v-if="timeLeft > 0">
     <div class="card-topic">
       <div class="card-content">
         <span class="card-current-time">{{ timer }} <span>restantes</span></span>
