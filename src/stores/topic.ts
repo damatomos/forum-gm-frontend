@@ -39,8 +39,8 @@ export const useTopicStore = defineStore('topic', () => {
   const countTopics = computed(() => topicPage.value?.size)
 
   async function fetchTopics(params?: { page?: number; size?: number }): Promise<TopicPage | null> {
-    const page = params?.page ?? 0
-    const size = params?.size ?? 5
+    const page = params ? (params.page ?? 0) : 0
+    const size = params ? (params.size ?? 5) : 5
     const res = await api.get(`/topic?page=${page}&size=${size}`)
 
     if (res.status === 200) {
@@ -51,10 +51,11 @@ export const useTopicStore = defineStore('topic', () => {
   }
 
   async function fetchRelevantsTopics(params?: {
-    page: number
-    size: number
+    page?: number
+    size?: number
   }): Promise<TopicPage | null> {
-    const { page, size } = params ?? { page: 0, size: 5 }
+    const page = params ? (params.page ?? 0) : 0
+    const size = params ? (params.size ?? 5) : 5
 
     const res = await api.get(`/topic?relevant=true&page=${page}&size=${size}`)
 

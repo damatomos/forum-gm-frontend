@@ -18,6 +18,8 @@ mock.onGet(/\/topic.*/).reply((config: AxiosRequestConfig) => {
   // const sort = params.sort ?? null
   const only_enabled = params.get('only_enabled') === 'true'
 
+  console.log('Request: ', { relevant, page, size })
+
   return [200, getTopicPages({ page, size, relevant, only_enabled, sort: '' })]
 })
 
@@ -50,7 +52,11 @@ function getTopicPages(params: {
   let content = topicList ?? []
 
   if (relevant) {
-    content = content.filter((topic) => topic.enabled && topic.count_heart > 30)
+    const RELEVANCE_THRESHOLD = 10
+    content = content
+      .map((t) => ({ ...t, score: relevanceScore(t) }))
+      .filter((t) => t.score >= RELEVANCE_THRESHOLD)
+      .sort((a, b) => b.score - a.score)
   }
 
   if (only_enabled) {
@@ -60,12 +66,15 @@ function getTopicPages(params: {
   // order by timer
   content = content.filter((t) => getCurrentTime(t) >= 0)
 
+  const total = content
+
   content = content.slice(page * size, page * size + size)
+
   return {
     content,
-    empty: false,
+    empty: content.length == 0,
     first: page == 0,
-    last: page == Math.ceil(topicList.length / size) - 1,
+    last: page == Math.ceil(total.length / size) - 1,
     number: page,
     sort: {
       empty: false,
@@ -87,12 +96,26 @@ function getTopicPages(params: {
     },
     relevant: relevant,
     size,
-    total_elements: topicList.length,
-    total_pages: Math.ceil(topicList.length / size) - 1,
+    total_elements: total.length,
+    total_pages: Math.ceil(total.length / size),
     only_enabled,
   }
 }
 
 const getCurrentTime = (topic: Topic) => {
   return new Date(topic.created_at!).getTime() + topic.timer - new Date().getTime()
+}
+
+function relevanceScore(topic: Topic): number {
+  const now = new Date().getTime()
+  const ageHours = (now - new Date(topic.created_at!).getTime()) / 3600000
+
+  return (
+    topic.count_heart * 2 +
+    topic.count_comment * 3 +
+    topic.count_answer * 2 +
+    topic.count_raiden * 5 +
+    topic.user.gmp * 0.1 -
+    ageHours * 1.5
+  )
 }

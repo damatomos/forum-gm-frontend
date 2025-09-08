@@ -3,27 +3,53 @@ import CardTopicComponent from '@/components/CardTopicComponent.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import SkeletonComponent from '@/components/SkeletonComponent.vue'
 import TabComponent from '@/components/TabComponent.vue'
-import { useTopicStore, type TopicPage } from '@/stores/topic'
+import { type Topic, useTopicStore, type TopicPage } from '@/stores/topic'
 import gsap from 'gsap'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const topicStore = useTopicStore()
 
 const loading = ref<boolean>(false)
-const topicPage = ref<TopicPage | null>(null)
+const contentTopics = ref<Topic[]>([])
+const currentPage = ref<TopicPage | null>(null)
+const page = ref<number>(0)
+const componentScroller = ref<HTMLDivElement | null>(null)
 
 const selectedTab = ref<number>(0)
 
-async function loadTopics() {
-  loading.value = true
-  if (selectedTab.value === 0) {
-    topicPage.value = await topicStore.fetchRelevantsTopics()
-  } else {
-    topicPage.value = await topicStore.fetchTopics({ page: 0 })
+async function loadRelevantsTopics(): Promise<Topic[]> {
+  const relevants = await topicStore.fetchRelevantsTopics({ page: page.value })
+  currentPage.value = relevants
+
+  if (!relevants || relevants.empty) {
+    return []
   }
 
-  console.log(topicPage)
-  loading.value = false
+  return relevants.content
+}
+
+async function loadRecentsTopics(): Promise<Topic[]> {
+  const recents = await topicStore.fetchTopics({ page: page.value })
+  currentPage.value = recents
+
+  console.log('lastValue: ', contentTopics.value)
+
+  if (!recents || recents.empty) {
+    console.log('Is empty')
+    return []
+  }
+
+  return recents.content
+}
+
+async function loadTopics() {
+  loading.value = true
+  let topics: Topic[] = []
+  if (selectedTab.value === 0) {
+    topics = await loadRelevantsTopics()
+  } else {
+    topics = await loadRecentsTopics()
+  }
 
   gsap.fromTo(
     '.feed-content',
@@ -36,14 +62,36 @@ async function loadTopics() {
       opacity: 1,
     },
   )
+
+  contentTopics.value = contentTopics.value.concat(topics)
+  loading.value = false
+}
+
+function handleScroll(_e: unknown) {
+  const element = componentScroller.value
+  if (element && element.getBoundingClientRect().bottom < window.innerHeight - 30) {
+    if (!currentPage.value?.last) {
+      page.value++
+      loadTopics()
+    }
+  }
 }
 
 onMounted(async () => {
   await loadTopics()
+
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 
 async function selectTab(index: number) {
   if (selectedTab.value === index) return
+  contentTopics.value = []
+  page.value = 0
+  currentPage.value = null
   selectedTab.value = index
   await loadTopics()
 }
@@ -62,16 +110,13 @@ async function selectTab(index: number) {
         <button class="add">+</button>
       </div>
     </header>
-    <section class="feed-content">
-      <template v-if="loading || !topicPage">
+    <section class="feed-content" ref="componentScroller">
+      <template v-if="contentTopics">
+        <CardTopicComponent v-for="topic in contentTopics" :key="topic.id" :topic="topic" />
+      </template>
+      <template v-if="loading">
         <SkeletonComponent v-for="topic in [1, 2, 3, 4, 5]" :key="topic" />
       </template>
-      <CardTopicComponent
-        v-else
-        v-for="topic in topicPage?.content"
-        :key="topic.id"
-        :topic="topic"
-      />
     </section>
   </main>
 </template>
