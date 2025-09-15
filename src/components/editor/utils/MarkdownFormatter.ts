@@ -40,6 +40,25 @@ export function formatter(value: string[]): HTMLElement[] {
     .filter((w) => w != null)
 }
 
+export function formatterParagraphs(value: string): string {
+  return value
+    .replace(/__(.+?)__/g, '<u>$1</u>')
+    .replace(/~~(.+?)~~/g, '<s>$1</s>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/_(.+?)_/g, '<em>$1</em>')
+
+  // .replace(/\*\*~(.+?)~\*\*/g, '<strong><s>$1</s></strong>')
+  // .replace(/~\*\*(.+?)\*\*~/g, '<strong><s>$1</s></strong>')
+  // .replace(/__\*\*(.+?)\*\*__/g, '<strong><u>$1</u></strong>')
+  // .replace(/\*\*__(.+?)__\*\*/g, '<strong><u>$1</u></strong>')
+  // .replace(/\*\*_(.+?)_\*\*/g, '<strong><em>$1</em></strong>')
+  // .replace(/_\*\*(.+?)\*\*_/g, '<strong><em>$1</em></strong>')
+  // .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  // .replace(/__(.+?)__/g, '<u>$1</u>')
+  // .replace(/_(.+?)_/g, '<em>$1</em>')
+  // .replace(/~~(.+?)~~/g, '<s>$1</s>')
+}
+
 function getElementByWrapper(wrapper: LineWrapper): HTMLElement {
   let currentElement: HTMLElement | HTMLImageElement
 
@@ -68,11 +87,6 @@ function getElementByWrapper(wrapper: LineWrapper): HTMLElement {
       imgEl.alt = wrapper.alt || wrapper.text
       currentElement = imgEl
       break
-    case SymbolType.BOLD:
-      const el = document.createElement('strong')
-      el.textContent = wrapper.text
-      currentElement = el
-      break
     case SymbolType.PARAGRAPH:
     default:
       currentElement = document.createElement('p')
@@ -92,10 +106,10 @@ function getElementByWrapper(wrapper: LineWrapper): HTMLElement {
     currentElement.style.margin = '0 auto'
   }
 
-  currentElement.textContent = wrapper.text
-
   if (currentElement instanceof HTMLParagraphElement) {
-    currentElement = getFormattedParagraph(currentElement)
+    currentElement.innerHTML = formatterParagraphs(wrapper.text)
+  } else {
+    currentElement.innerHTML = wrapper.text
   }
 
   if (wrapper.children) {
@@ -105,12 +119,12 @@ function getElementByWrapper(wrapper: LineWrapper): HTMLElement {
   return currentElement
 }
 
-function getFormattedParagraph(paragraph: HTMLParagraphElement): HTMLParagraphElement {
-  // console.log('Modifying paragraph')
-  // const boldMatch = currentElement.textContent.match(/\*\*(.+?)\*\*/g)
-  // console.log(boldMatch)
-  return paragraph
-}
+// function getFormattedParagraph(paragraph: HTMLParagraphElement): HTMLParagraphElement {
+//   // console.log('Modifying paragraph')
+//   // const boldMatch = currentElement.textContent.match(/\*\*(.+?)\*\*/g)
+//   // console.log(boldMatch)
+//   return paragraph
+// }
 
 function getWrapperByLine(value: string): LineWrapper | null {
   if (!value.trim()) return null // ignora linhas vazias

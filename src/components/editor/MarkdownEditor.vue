@@ -34,16 +34,20 @@ const updatePreview = () => {
   if (preview.value) {
     preview.value.innerHTML = ''
     const lines = markdown.value.split('\n')
-    console.log(lines)
+
     if (lines && lines.length > 0) {
       const elements = formatter(lines)
 
       elements.forEach((e) => {
+        // e.innerHTML = formatterParagraphs(e.innerHTML)
         preview.value?.appendChild(e)
       })
 
       console.log('update preview')
     }
+
+    // formmatter all paragraphs html (bold, italic, underline, etc)
+    // preview.value.innerHTML = formatterParagraphs(preview.value.innerHTML)
   }
 }
 
@@ -86,14 +90,18 @@ const convertTo = (type: SymbolType, text: string) => {
 </script>
 
 <template>
-  <div class="toolbar">
+  <!-- <div class="toolbar">
     <div class="tools">
       <button @click="apply(SymbolType.BOLD)">Bold</button>
       <button>Italic</button>
     </div>
     <button @click="toggleMode">Preview</button>
-  </div>
-  <MarkdownEditorTools @formatter="(type) => apply(type)" />
+  </div> -->
+  <MarkdownEditorTools
+    @formatter="(type) => apply(type)"
+    @preview="toggleMode"
+    :is-preview="isPreview"
+  />
   <textarea
     v-if="!isPreview"
     ref="editor"
@@ -120,6 +128,26 @@ const convertTo = (type: SymbolType, text: string) => {
 
 #preview {
   word-break: break-all;
+
+  :deep(p) {
+    margin: 8px 0;
+
+    strong * {
+      font-weight: bold;
+    }
+
+    em * {
+      font-style: italic;
+    }
+
+    u * {
+      text-decoration: underline;
+    }
+
+    s * {
+      text-decoration: line-through;
+    }
+  }
 }
 
 .toolbar {

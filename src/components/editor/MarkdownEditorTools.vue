@@ -14,9 +14,15 @@ import { SymbolType } from './utils/MarkdownFormatter'
 interface ToolbarEmitter {
   (e: 'formatter', type: SymbolType): void
   (e: 'align', type: SymbolType): void
+  (e: 'preview'): void
+}
+
+interface MarkdownEditorToolsProps {
+  isPreview: boolean
 }
 
 const emit = defineEmits<ToolbarEmitter>()
+const props = defineProps<MarkdownEditorToolsProps>()
 </script>
 
 <template>
@@ -35,8 +41,8 @@ const emit = defineEmits<ToolbarEmitter>()
         <TextStrikethroughIcon />
       </span>
     </div>
-    <div class="text-align tool-list" @click="emit('align', SymbolType.ALIGNLEFT)">
-      <span class="tool left">
+    <div class="text-align tool-list">
+      <span class="tool left" @click="emit('align', SymbolType.ALIGNLEFT)">
         <AlignLeftIcon />
       </span>
       <span class="tool center" @click="emit('align', SymbolType.ALIGNCENTER)">
@@ -58,6 +64,11 @@ const emit = defineEmits<ToolbarEmitter>()
       </span>
     </div>
     <div class="others tool-list"></div>
+    <div class="tool-list">
+      <button :class="'preview ' + (props.isPreview ? 'enabled' : '')" @click="emit('preview')">
+        Preview
+      </button>
+    </div>
   </div>
 </template>
 
@@ -65,7 +76,7 @@ const emit = defineEmits<ToolbarEmitter>()
 .toolbar {
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
 
   border-radius: 10px;
@@ -96,6 +107,27 @@ const emit = defineEmits<ToolbarEmitter>()
 
       transition: 0.2s linear;
       cursor: pointer;
+
+      &:hover,
+      &:active,
+      &.enabled {
+        background-color: $tool-enabled;
+      }
+    }
+
+    .preview {
+      all: unset;
+      cursor: pointer;
+      width: fit-content;
+      padding: 4px 16px;
+      background-color: transparent;
+      border-radius: 4px;
+      background-image: url('../assets/icons/eye.svg');
+      background-size: 16px;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      transition: 0.2s linear;
 
       &:hover,
       &:active,
