@@ -17,6 +17,10 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@editorjs/code": "^2.9.3",
+    "@editorjs/embed": "^2.7.6",
+    "@editorjs/inline-code": "^1.5.2",
+    "@editorjs/link": "^2.6.2",
     "axios": "^1.11.0",
     "axios-mock-adapter": "^2.1.0",
     "gsap": "^3.13.0",
