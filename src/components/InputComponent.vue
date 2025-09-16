@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 interface Props {
   width?: string | number
   label?: string
@@ -10,7 +9,7 @@ interface Props {
   type: string
 }
 
-const textInput = ref('')
+const model = defineModel()
 const props = defineProps<Props>()
 </script>
 
@@ -18,7 +17,7 @@ const props = defineProps<Props>()
   <label :for="props.id" :class="{ 'label-auth': props.variant == 'auth' }">{{ label }}</label>
   <div class="container-input" :style="{ width: `${props.width}px` || '100%'}">
     <input
-      v-model="textInput"
+      v-model="model"
       :class="[variant ? variant : 'common']"
       :type="type"
       :placeholder="placeholder"
@@ -26,7 +25,7 @@ const props = defineProps<Props>()
       :id="props.id"
     />
     <img v-if="props.variant === 'send'" src="/icons/PaperPlaneRight.svg" alt="button push" />
-    <span v-if="props.variant === 'common-number'">{{ textInput.length }}/{{ maxLength }}</span>
+    <span v-if="props.variant === 'common-number'">{{ model.length }}/{{ maxLength }}</span>
   </div>
 </template>
 
