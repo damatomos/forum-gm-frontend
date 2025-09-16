@@ -2,6 +2,22 @@
 import InputComponent from '@/components/InputComponent.vue'
 import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
 import BackgroundComponent from '@/components/BackgroundComponent.vue'
+import { useForm } from 'vee-validate'
+import * as yup from 'yup'
+
+const { handleSubmit, errors, defineField } = useForm({
+  validationSchema: yup.object({
+    email: yup.string().email().required(),
+    password: yup.string().required(),
+  }),
+})
+
+const [email, emailAttrs] = defineField('email', { validateOnModelUpdate: false })
+const [password, passwordAttrs] = defineField('password', { validateOnModelUpdate: false })
+
+const onSubmit = handleSubmit((values) => {
+  alert(JSON.stringify(values, null, 2))
+})
 </script>
 
 <template>
@@ -10,14 +26,32 @@ import BackgroundComponent from '@/components/BackgroundComponent.vue'
     <div class="container-login">
       <h1>Login</h1>
       <InputComponent
+        v-model="email"
+        v-bind="emailAttrs"
         label="Email"
         type="email"
         variant="auth"
         placeholder="Seu melhor email"
         id="email-login"
       />
-      <InputComponent label="Password" type="password" variant="auth" id="password-login" />
-      <ButtonSimpleComponent class="btn-login" variant="button-auth" content="Entrar" />
+      <span class="error email">{{ errors.email }}</span>
+
+      <InputComponent
+        v-model="password"
+        v-bind="passwordAttrs"
+        label="Password"
+        type="password"
+        variant="auth"
+        id="password-login"
+      />
+      <span class="error password">{{ errors.password }}</span>
+
+      <ButtonSimpleComponent
+        @click="onSubmit"
+        class="btn-login"
+        variant="button-auth"
+        content="Entrar"
+      />
       <p>Não possui uma conta? <router-link to="/register">registre-se.</router-link></p>
     </div>
   </div>
@@ -36,6 +70,19 @@ import BackgroundComponent from '@/components/BackgroundComponent.vue'
       font-size: $font-size-5xl;
       font-weight: bold;
       margin-bottom: 1.5rem;
+    }
+
+    .error {
+      color: $gm-c-red;
+      position: absolute;
+      padding-left: 8px;
+      top: 0;
+      &.email {
+        top: 455px;
+      }
+      &.password {
+        top: 553px;
+      }
     }
 
     :deep(#email-login) {
