@@ -31,7 +31,7 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
         id="password-register"
       />
       <ButtonSimpleComponent class="btn-login" variant="button-auth" content="Cadastrar" />
-      <p>Já possui uma conta? <a href="LoginView.vue">clique aqui.</a></p>
+      <p>Já possui uma conta? <router-link to="/login">clique aqui.</router-link></p>
     </div>
   </div>
 </template>

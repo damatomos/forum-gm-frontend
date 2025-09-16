@@ -18,7 +18,7 @@ import BackgroundComponent from '@/components/BackgroundComponent.vue'
       />
       <InputComponent label="Password" type="password" variant="auth" id="password-login" />
       <ButtonSimpleComponent class="btn-login" variant="button-auth" content="Entrar" />
-      <p>Não possui uma conta? <a href="RegisterView.vue">registre-se.</a></p>
+      <p>Não possui uma conta? <router-link to="/register">registre-se.</router-link></p>
     </div>
   </div>
 </template>
