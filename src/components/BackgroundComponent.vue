@@ -10,97 +10,47 @@
 </template>
 
 <style scoped lang="scss">
-@mixin polygon-top {
-  clip-path: polygon(0 0, 56% 0, 100% 100%, 0 89%);
+.container-polygons {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+
   position: fixed;
   top: 0;
-  z-index: 100;
-}
-
-@mixin polygon-bottom {
-  clip-path: polygon(0 46%, 100% 0, 54% 100%, 0 100%);
-  position: fixed;
-  bottom: 0;
-  z-index: 100;
-}
-
-@mixin reverse-bottom {
-  transform: scaleX(-1);
-  right: 0;
-}
-
-.container-polygons {
-  position: relative;
-  width: 100%;
-  z-index: -999;
+  left: 0;
+  z-index: -1;
+  overflow: hidden;
 
   .polygon {
-    width: 850px;
-    height: 434px;
+    position: absolute;
+    min-width: 100%;
+    max-width: 120%;
+    min-height: 100%;
+    max-height: 120%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 16 / 9;
   }
 
   .one {
-    @include polygon-top;
+    clip-path: polygon(0 0, 30% 0%, 50% 50%, 0 48%);
     background-color: $gm-c-rose-polygon;
   }
 
   .two {
-    @include polygon-bottom;
+    clip-path: polygon(0% 80%, 50% 50%, 36% 100%, 0 100%);
     background-color: $gm-c-yellow-polygon;
   }
 
   .three {
-    @include polygon-top;
-    @include reverse-bottom;
+    clip-path: polygon(50% 50%, 60% 0%, 100% 0%, 100% 30%);
     background-color: $gm-c-purple-polygon;
   }
 
   .four {
-    @include polygon-bottom;
-    @include reverse-bottom;
+    clip-path: polygon(50% 50%, 100% 80%, 100% 100%, 64% 100%);
     background-color: $gm-c-blue-polygon;
-  }
-
-  @media (max-width: 1350px) {
-    .polygon {
-      width: 680px;
-    }
-  }
-
-  @media (max-width: 1100px) {
-    .polygon {
-      width: 545px;
-    }
-  }
-
-  @media (max-width: 900px) {
-    .polygon {
-      width: 430px;
-    }
-  }
-
-  @media (max-width: 730px) {
-    .polygon {
-      width: 350px;
-    }
-  }
-
-  @media (max-width: 590px) {
-    .polygon {
-      width: 300px;
-    }
-  }
-
-  @media (max-width: 470px) {
-    .polygon {
-      width: 230px;
-    }
-  }
-
-  @media (max-width: 380px) {
-    .polygon {
-      width: 180px;
-    }
   }
 }
 </style>
