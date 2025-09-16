@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import BackgroundComponent from '@/components/BackgroundComponent.vue';
 import InputComponent from '@/components/InputComponent.vue'
 import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
 </script>
 
 <template>
+  <BackgroundComponent />
   <div class="container">
     <div class="container-register">
       <h1>Registre-se</h1>
