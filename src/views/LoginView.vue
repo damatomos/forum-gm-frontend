@@ -7,8 +7,11 @@ import * as yup from 'yup'
 
 const { handleSubmit, errors, defineField } = useForm({
   validationSchema: yup.object({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
+    email: yup
+      .string()
+      .email('O e-mail deve ser um e-mail válido')
+      .required('Email é um campo obrigatório'),
+    password: yup.string().required('Senha é um campo obrigatório'),
   }),
 })
 
