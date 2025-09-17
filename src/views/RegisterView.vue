@@ -17,11 +17,11 @@ const { handleSubmit, errors, defineField } = useForm({
       .required('Email é um campo obrigatório'),
     password: yup
       .string()
+      .matches(/^[0-9a-zA-Z$*&@#.]{8,}.*$/, 'deve conter ao menos 8 caracteres')
       .matches(/^(?=.*\d).*$/, 'deve conter ao menos um número')
       .matches(/^(?=.*[a-z]).*$/, 'deve conter ao menos uma letra minúscula')
       .matches(/^(?=.*[A-Z]).*$/, 'deve conter ao menos uma letra maiúscula')
       .matches(/^(?=.*[$*&@#.]).*$/, 'deve conter ao menos um caractere especial')
-      .matches(/^[0-9a-zA-Z$*&@#.]{8,}$/, 'deve conter ao menos 8 caracteres')
       .required('Senha é um campo obrigatório'),
   }),
 })
@@ -40,37 +40,43 @@ const onSubmit = handleSubmit((values) => {
   <div class="container">
     <div class="container-register">
       <h1>Registre-se</h1>
-      <InputComponent
-        v-model="nome"
-        v-bind="nomeAttrs"
-        label="Nome"
-        type="text"
-        variant="auth"
-        placeholder="Seu nome"
-        id="nome-register"
-      />
-      <span class="error nome">{{ errors.nome }}</span>
+      <div class="container-name">
+        <InputComponent
+          v-model="nome"
+          v-bind="nomeAttrs"
+          label="Nome"
+          type="text"
+          variant="auth"
+          placeholder="Seu nome"
+          id="nome-register"
+        />
+        <span class="error nome">{{ errors.nome }}</span>
+      </div>
 
-      <InputComponent
-        v-model="email"
-        v-bind="emailAttrs"
-        label="Email"
-        type="email"
-        variant="auth"
-        placeholder="Seu melhor email"
-        id="email-register"
-      />
-      <span class="error email">{{ errors.email }}</span>
+      <div class="container-email">
+        <InputComponent
+          v-model="email"
+          v-bind="emailAttrs"
+          label="Email"
+          type="email"
+          variant="auth"
+          placeholder="Seu melhor email"
+          id="email-register"
+        />
+        <span class="error email">{{ errors.email }}</span>
+      </div>
 
-      <InputComponent
-        v-model="password"
-        v-bind="passwordAttrs"
-        label="Senha"
-        type="Senha"
-        variant="auth"
-        id="password-register"
-      />
-      <span class="error password">{{ errors.password }}</span>
+      <div class="container-password">
+        <InputComponent
+          v-model="password"
+          v-bind="passwordAttrs"
+          label="Senha"
+          type="password"
+          variant="auth"
+          id="password-register"
+        />
+        <span class="error password">{{ errors.password }}</span>
+      </div>
 
       <ButtonSimpleComponent
         @click="onSubmit"
@@ -89,7 +95,7 @@ const onSubmit = handleSubmit((values) => {
   height: 100vh;
   @include flex-center;
 
-  .container-register {
+  &-register {
     @include style-login-and-register;
     position: relative;
     h1 {
@@ -100,28 +106,10 @@ const onSubmit = handleSubmit((values) => {
     }
 
     .error {
+      font-size: 16px;
+      display: inline-block;
       color: $gm-c-red;
-      position: absolute;
-      padding-left: 8px;
-      top: 0;
-      &.nome {
-        top: 232px;
-      }
-      &.email {
-        top: 330px;
-      }
-      &.password {
-        top: 425px;
-      }
-    }
-
-    :deep(#nome-register),
-    :deep(#email-register) {
-      margin-bottom: 1.5rem;
-    }
-
-    :deep(#password-register) {
-      margin-bottom: 3rem;
+      margin-left: 8px;
     }
 
     .btn-login {
@@ -131,6 +119,15 @@ const onSubmit = handleSubmit((values) => {
     p {
       @include link-login-and-register;
     }
+  }
+
+  &-name,
+  &-email {
+    margin-bottom: 0.375rem;
+  }
+
+  &-password {
+    margin-bottom: 1.875rem;
   }
 }
 </style>
