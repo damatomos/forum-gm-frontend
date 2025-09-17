@@ -15,7 +15,7 @@ const props = defineProps<Props>()
 
 <template>
   <label :for="props.id" :class="{ 'label-auth': props.variant == 'auth' }">{{ label }}</label>
-  <div class="container-input" :style="{ width: `${props.width}px` || '100%'}">
+  <div class="container-input" :style="{ width: `${props.width}px` || '100%' }">
     <input
       v-model="model"
       :class="[variant ? variant : 'common']"
@@ -32,7 +32,7 @@ const props = defineProps<Props>()
 <style scoped lang="scss">
 label {
   color: gm-c-text-light-1;
-  font-size: $font-family;
+  font-family: $font-family;
   font-size: $font-size-xl;
   margin-bottom: 0.625rem;
 }
@@ -87,6 +87,30 @@ label {
     position: absolute;
     bottom: 0;
     right: 0.625rem;
+  }
+}
+
+@include media('tablet') {
+  label {
+    font-size: $font-size-lg;
+  }
+  .container-input {
+    input {
+      font-size: $font-size-base;
+    }
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+@include media('mobile') {
+  label {
+    font-size: $font-size-base;
+  }
+  img {
+    width: 18px;
+    height: 18px;
   }
 }
 </style>
