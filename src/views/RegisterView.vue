@@ -106,7 +106,7 @@ const onSubmit = handleSubmit((values) => {
     }
 
     .error {
-      font-size: 16px;
+      font-size: $font-size-base;
       display: inline-block;
       color: $gm-c-red;
       margin-left: 8px;
@@ -128,6 +128,43 @@ const onSubmit = handleSubmit((values) => {
 
   &-password {
     margin-bottom: 1.875rem;
+  }
+
+  @include media('tablet') {
+    &-register {
+      h1 {
+        font-size: $font-size-4xl;
+        margin-bottom: 1.25rem;
+      }
+      .error {
+        font-size: $font-size-sm;
+      }
+    }
+    &-name,
+    &-email {
+      margin-bottom: 0;
+    }
+    &-password {
+      margin-bottom: 1.25rem;
+    }
+  }
+  @include media('mobile') {
+    &-register {
+      h1 {
+        font-size: $font-size-3xl;
+        margin-bottom: 1rem;
+      }
+      .error {
+        font-size: $font-size-xs;
+      }
+    }
+    &-name,
+    &-email {
+      margin-bottom: 0;
+    }
+    &-password {
+      margin-bottom: 1.25rem;
+    }
   }
 }
 </style>
