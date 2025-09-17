@@ -48,7 +48,6 @@ button {
 }
 
 .button-auth {
-  width: 450px;
   @include button-purple;
   font-size: $font-size-3xl;
 }
