@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
   content: string
-  variant?: 'purple' | 'rose' | 'button-auth'
+  variant?: 'purple' | 'rose' | 'button-auth' | 'common'
 }
 
 const props = defineProps<Props>()
