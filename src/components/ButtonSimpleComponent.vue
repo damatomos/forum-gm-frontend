@@ -51,4 +51,15 @@ button {
   @include button-purple;
   font-size: $font-size-3xl;
 }
+
+@include media('tablet') {
+  .button-auth {
+    font-size: $font-size-2xl;
+  }
+}
+@include media('mobile') {
+  .button-auth {
+    font-size: $font-size-lg;
+  }
+}
 </style>
