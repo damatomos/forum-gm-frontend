@@ -50,4 +50,7 @@
   a {
     color: $gm-c-yellow;
   }
+  @include media('tablet') {
+    font-size: $font-size-sm;
+  }
 }
