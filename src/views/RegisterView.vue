@@ -65,8 +65,8 @@ const onSubmit = handleSubmit((values) => {
       <InputComponent
         v-model="password"
         v-bind="passwordAttrs"
-        label="Password"
-        type="password"
+        label="Senha"
+        type="Senha"
         variant="auth"
         id="password-register"
       />
