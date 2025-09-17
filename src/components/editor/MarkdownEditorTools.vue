@@ -56,10 +56,10 @@ const props = defineProps<MarkdownEditorToolsProps>()
       </span>
     </div>
     <div class="text-list tool-list">
-      <span class="tool unorder-list">
+      <span class="tool unorder-list" @click="emit('formatter', SymbolType.UNORDEREDLIST)">
         <UnorderListIcon />
       </span>
-      <span class="tool order-list">
+      <span class="tool order-list" @click="emit('formatter', SymbolType.ORDEREDLIST)">
         <NumberOrderListIcon />
       </span>
     </div>

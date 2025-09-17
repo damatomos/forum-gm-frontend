@@ -1,21 +1,25 @@
 export enum SymbolType {
   PARAGRAPH,
-  HEADONE,
-  HEADTWO,
-  HEADTHREE,
-  HEADFOUR,
-  HEADFIVE,
-  HEADSIX,
-  BOLD,
-  ITALIC,
-  UNDERLINE,
-  STRIKETHROUGH,
-  ALIGNLEFT,
-  ALIGNCENTER,
-  ALIGNRIGHT,
-  ALIGNJUSTIFY,
-  IMAGE,
-  LINK,
+  HEADONE = '#',
+  HEADTWO = '##',
+  HEADTHREE = '###',
+  HEADFOUR = '####',
+  HEADFIVE = '#####',
+  HEADSIX = '######',
+  BOLD = '**',
+  ITALIC = '_',
+  UNDERLINE = '__',
+  STRIKETHROUGH = '~~',
+  ALIGNLEFT = '<',
+  ALIGNCENTER = '><',
+  ALIGNRIGHT = '>',
+  ALIGNJUSTIFY = '>=',
+  IMAGE = '![alt](url)',
+  LINK = '[text](url)',
+  UNORDEREDLIST = '- ',
+  ORDEREDLIST = '1. ',
+  QUOTE = '> ',
+  CODE = '```',
 }
 
 enum HorizontalPosition {
@@ -46,17 +50,11 @@ export function formatterParagraphs(value: string): string {
     .replace(/~~(.+?)~~/g, '<s>$1</s>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/_(.+?)_/g, '<em>$1</em>')
-
-  // .replace(/\*\*~(.+?)~\*\*/g, '<strong><s>$1</s></strong>')
-  // .replace(/~\*\*(.+?)\*\*~/g, '<strong><s>$1</s></strong>')
-  // .replace(/__\*\*(.+?)\*\*__/g, '<strong><u>$1</u></strong>')
-  // .replace(/\*\*__(.+?)__\*\*/g, '<strong><u>$1</u></strong>')
-  // .replace(/\*\*_(.+?)_\*\*/g, '<strong><em>$1</em></strong>')
-  // .replace(/_\*\*(.+?)\*\*_/g, '<strong><em>$1</em></strong>')
-  // .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-  // .replace(/__(.+?)__/g, '<u>$1</u>')
-  // .replace(/_(.+?)_/g, '<em>$1</em>')
-  // .replace(/~~(.+?)~~/g, '<s>$1</s>')
+    .replace(/<(.+?)/g, '&lt;$1')
+    .replace(/>(.+?)/g, '&gt;$1')
+    .replace(/\n/g, '<br />')
+    .replace(/\s{2,}/g, (match) => '&nbsp;'.repeat(match.length))
+    .replace(/```(.+?)```/g, '<code>$1</code>')
 }
 
 function getElementByWrapper(wrapper: LineWrapper): HTMLElement {
@@ -107,7 +105,9 @@ function getElementByWrapper(wrapper: LineWrapper): HTMLElement {
   }
 
   if (currentElement instanceof HTMLParagraphElement) {
-    currentElement.innerHTML = formatterParagraphs(wrapper.text)
+    const formated = formatterParagraphs(wrapper.text)
+    currentElement.innerHTML = formated
+    console.log(formated)
   } else {
     currentElement.innerHTML = wrapper.text
   }
@@ -138,7 +138,16 @@ function getWrapperByLine(value: string): LineWrapper | null {
         ? HorizontalPosition.RIGHT
         : HorizontalPosition.LEFT
 
-  value = value.replace(/^>\s*/, '').replace(/\s*<$/, '')
+  if (horizontalPosition == HorizontalPosition.LEFT && value.endsWith('<')) {
+    console.log('clear left here')
+    value = value.trim().slice(0, -1)
+  } else if (horizontalPosition == HorizontalPosition.RIGHT && value.startsWith('>')) {
+    console.log('clear right here')
+    value = value.trim().slice(1)
+  } else if (horizontalPosition == HorizontalPosition.CENTER) {
+    console.log('clear center here')
+    value = value.trim().slice(1, -1)
+  }
 
   const imageMatch = value.match(/!\[(.*?)\]\((.*?)\)/)
   const linkMatch = value.match(/\[(.*?)\]\((.*?)\)/)

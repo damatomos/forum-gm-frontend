@@ -2,6 +2,15 @@
 import { nextTick, onMounted, ref } from 'vue'
 import { formatter, SymbolType } from './utils/MarkdownFormatter'
 import MarkdownEditorTools from './MarkdownEditorTools.vue'
+import {
+  convertTextToMarkdown,
+  getLastLine,
+  getNumberOfOrderedList,
+  lastLineIsEmptyList,
+  lastLineIsOrderedList,
+  lastLineIsUnOrderedList,
+  removeMarkdownSyntaxBetweenText,
+} from './utils/MarkdownExpressions'
 
 const editor = ref<HTMLTextAreaElement>()
 const markdown = ref<string>('')
@@ -15,7 +24,30 @@ const onChange = (event: Event) => {
   const target = event.target as HTMLTextAreaElement
 
   if (target.value.endsWith('\n')) {
-    console.log('fim da linha')
+  }
+}
+
+const onKeyUp = (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    const target = event.target as HTMLTextAreaElement
+
+    if (lastLineIsOrderedList(target.value)) {
+      const index = getNumberOfOrderedList(target.value)
+      console.log('value: ', index)
+      target.value += `${index + 1}. `
+    } else if (lastLineIsUnOrderedList(target.value)) {
+      target.value += '- '
+    }
+  }
+}
+
+const onKeyPress = (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    const target = event.target as HTMLTextAreaElement
+    if (lastLineIsEmptyList(target.value)) {
+      const lastLine = getLastLine(target.value)
+      target.value = target.value.slice(0, target.value.length - lastLine.length)
+    }
   }
 }
 
@@ -39,15 +71,9 @@ const updatePreview = () => {
       const elements = formatter(lines)
 
       elements.forEach((e) => {
-        // e.innerHTML = formatterParagraphs(e.innerHTML)
         preview.value?.appendChild(e)
       })
-
-      console.log('update preview')
     }
-
-    // formmatter all paragraphs html (bold, italic, underline, etc)
-    // preview.value.innerHTML = formatterParagraphs(preview.value.innerHTML)
   }
 }
 
@@ -57,35 +83,41 @@ const apply = (type: SymbolType) => {
   const start = editor.value.selectionStart
   const end = editor.value.selectionEnd
 
-  if (start == end) return
+  // if (start == end) return
 
   const selectedText = markdown.value.slice(start, end)
   const before = markdown.value.slice(0, start)
   const after = markdown.value.slice(end)
+  let newText = removeIfDontUse(before, after, type)!
 
-  const newText = convertTo(type, selectedText)
+  if (newText !== null) {
+    markdown.value = newText
+
+    nextTick(() => {
+      editor.value!.focus()
+      const cursorPos = start - type.toString().length
+      editor.value!.setSelectionRange(cursorPos, cursorPos)
+    })
+    return
+  }
+
+  newText = convertTextToMarkdown(type, selectedText)
   markdown.value = before + newText + after
 
   nextTick(() => {
     editor.value!.focus()
-    editor.value!.setSelectionRange(start, start + newText.length)
+    if (!selectedText) {
+      // move cursor between the symbols
+      const cursorPos = start + type.toString().length
+      editor.value!.setSelectionRange(cursorPos, cursorPos)
+    } else {
+      editor.value!.setSelectionRange(start, start + newText.length)
+    }
   })
 }
 
-const convertTo = (type: SymbolType, text: string) => {
-  if (type == SymbolType.BOLD) {
-    if (/\*\*(.+?)\*\*/g.test(text)) {
-      return text.replace(/\*\*\s*/g, '').replace(/\s*\*\*$/g, '')
-    }
-
-    return `**${text}**`
-  } else if (type == SymbolType.ITALIC) {
-    if (/_(.+?)_/g.test(text)) {
-      return text.replace(/_\s*/g, '').replace(/\s*_$/g, '')
-    }
-    return `_${text}_`
-  }
-  return text
+const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
+  return removeMarkdownSyntaxBetweenText(before, after, type)
 }
 </script>
 
@@ -99,6 +131,7 @@ const convertTo = (type: SymbolType, text: string) => {
   </div> -->
   <MarkdownEditorTools
     @formatter="(type) => apply(type)"
+    @align="(type) => apply(type)"
     @preview="toggleMode"
     :is-preview="isPreview"
   />
@@ -110,6 +143,8 @@ const convertTo = (type: SymbolType, text: string) => {
     v-model="markdown"
     @input="onChange"
     @change="onChange"
+    @keyup="onKeyUp"
+    @keypress="onKeyPress"
   ></textarea>
   <div v-else id="preview" ref="preview"></div>
 </template>
