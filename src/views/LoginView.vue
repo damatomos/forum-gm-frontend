@@ -28,26 +28,30 @@ const onSubmit = handleSubmit((values) => {
   <div class="container">
     <div class="container-login">
       <h1>Login</h1>
-      <InputComponent
-        v-model="email"
-        v-bind="emailAttrs"
-        label="Email"
-        type="email"
-        variant="auth"
-        placeholder="Seu melhor email"
-        id="email-login"
-      />
-      <span class="error email">{{ errors.email }}</span>
+      <div class="container-email">
+        <InputComponent
+          v-model="email"
+          v-bind="emailAttrs"
+          label="Email"
+          type="email"
+          variant="auth"
+          placeholder="Seu melhor email"
+          id="email-login"
+        />
+        <span class="error email">{{ errors.email }}</span>
+      </div>
 
-      <InputComponent
-        v-model="password"
-        v-bind="passwordAttrs"
-        label="Password"
-        type="password"
-        variant="auth"
-        id="password-login"
-      />
-      <span class="error password">{{ errors.password }}</span>
+      <div class="container-password">
+        <InputComponent
+          v-model="password"
+          v-bind="passwordAttrs"
+          label="Senha"
+          type="password"
+          variant="auth"
+          id="password-login"
+        />
+        <span class="error password">{{ errors.password }}</span>
+      </div>
 
       <ButtonSimpleComponent
         @click="onSubmit"
@@ -65,7 +69,7 @@ const onSubmit = handleSubmit((values) => {
   width: 100%;
   height: 100vh;
   @include flex-center;
-  .container-login {
+  &-login {
     @include style-login-and-register;
 
     h1 {
@@ -76,24 +80,10 @@ const onSubmit = handleSubmit((values) => {
     }
 
     .error {
+      font-size: $font-size-base;
       color: $gm-c-red;
-      position: absolute;
-      padding-left: 8px;
-      top: 0;
-      &.email {
-        top: 455px;
-      }
-      &.password {
-        top: 553px;
-      }
-    }
-
-    :deep(#email-login) {
-      margin-bottom: 1.5rem;
-    }
-
-    :deep(#password-login) {
-      margin-bottom: 3rem;
+      display: inline-block;
+      margin-left: 8px;
     }
 
     .btn-login {
@@ -102,6 +92,43 @@ const onSubmit = handleSubmit((values) => {
 
     p {
       @include link-login-and-register;
+    }
+  }
+
+  &-email {
+    margin-bottom: 0.375rem;
+  }
+
+  &-password {
+    margin-bottom: 1.875rem;
+  }
+
+  @include media('tablet') {
+    &-login {
+      h1 {
+        font-size: $font-size-4xl;
+        margin-bottom: 1.25rem;
+      }
+      .error {
+        font-size: $font-size-sm;
+      }
+    }
+    &-email {
+      margin-bottom: 0;
+    }
+    &-password {
+      margin-bottom: 1.25rem;
+    }
+  }
+  @include media('mobile') {
+    &-login {
+      h1 {
+        font-size: $font-size-3xl;
+        margin-bottom: 1rem;
+      }
+      .error {
+        font-size: $font-size-xs;
+      }
     }
   }
 }
