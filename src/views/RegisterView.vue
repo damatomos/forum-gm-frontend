@@ -158,13 +158,6 @@ const onSubmit = handleSubmit((values) => {
         font-size: $font-size-xs;
       }
     }
-    &-name,
-    &-email {
-      margin-bottom: 0;
-    }
-    &-password {
-      margin-bottom: 1.25rem;
-    }
   }
 }
 </style>
