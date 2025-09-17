@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BackgroundComponent from '@/components/BackgroundComponent.vue';
+import BackgroundComponent from '@/components/BackgroundComponent.vue'
 import InputComponent from '@/components/InputComponent.vue'
 import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
 import { useForm } from 'vee-validate'
@@ -7,9 +7,22 @@ import * as yup from 'yup'
 
 const { handleSubmit, errors, defineField } = useForm({
   validationSchema: yup.object({
-    nome: yup.string().min(4).required(),
-    email: yup.string().email().required(),
-    password: yup.string().min(8).required(),
+    nome: yup
+      .string()
+      .min(4, 'Requer ao menos 4 caracteres')
+      .required('Nome é um campo obrigatório'),
+    email: yup
+      .string()
+      .email('O e-mail deve ser um e-mail válido')
+      .required('Email é um campo obrigatório'),
+    password: yup
+      .string()
+      .matches(/^(?=.*\d).*$/, 'deve conter ao menos um número')
+      .matches(/^(?=.*[a-z]).*$/, 'deve conter ao menos uma letra minúscula')
+      .matches(/^(?=.*[A-Z]).*$/, 'deve conter ao menos uma letra maiúscula')
+      .matches(/^(?=.*[$*&@#.]).*$/, 'deve conter ao menos um caractere especial')
+      .matches(/^[0-9a-zA-Z$*&@#.]{8,}$/, 'deve conter ao menos 8 caracteres')
+      .required('Senha é um campo obrigatório'),
   }),
 })
 
