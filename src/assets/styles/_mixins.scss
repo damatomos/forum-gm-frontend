@@ -1,3 +1,5 @@
+@use './variables' as *;
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
@@ -17,5 +19,38 @@
     @media (min-width: 769px) {
       @content;
     }
+  }
+}
+
+@mixin text-center-white {
+  text-align: center;
+  color: $gm-c-white;
+}
+
+@mixin style-login-and-register {
+  border-radius: 0.625rem;
+  padding: 5rem 1.5rem 2.25rem 1.5rem;
+  width: 500px;
+  background: $gm-c-purple-dark;
+  @include media('tablet') {
+    width: 420px;
+    padding: 4rem 1.5rem 2.25rem 1.5rem;
+  }
+  @include media('mobile') {
+    padding: 3.5rem 1.25rem 1.75rem 1.25rem;
+    max-width: 380px;
+    margin: 20px
+  }
+}
+
+@mixin link-login-and-register {
+  @include text-center-white;
+  line-height: 120%;
+  font-size: $font-size-base;
+  a {
+    color: $gm-c-yellow;
+  }
+  @include media('tablet') {
+    font-size: $font-size-sm;
   }
 }
