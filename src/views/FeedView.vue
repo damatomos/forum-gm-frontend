@@ -1,12 +1,99 @@
 <script setup lang="ts">
+import CardTopicComponent from '@/components/CardTopicComponent.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import SkeletonComponent from '@/components/SkeletonComponent.vue'
 import TabComponent from '@/components/TabComponent.vue'
-import { ref } from 'vue'
+import { type Topic, useTopicStore, type TopicPage } from '@/stores/topic'
+import gsap from 'gsap'
+import { onMounted, onUnmounted, ref } from 'vue'
+
+const topicStore = useTopicStore()
+
+const loading = ref<boolean>(false)
+const contentTopics = ref<Topic[]>([])
+const currentPage = ref<TopicPage | null>(null)
+const page = ref<number>(0)
+const componentScroller = ref<HTMLDivElement | null>(null)
 
 const selectedTab = ref<number>(0)
 
-function selectTab(index: number) {
+async function loadRelevantsTopics(): Promise<Topic[]> {
+  const relevants = await topicStore.fetchRelevantsTopics({ page: page.value })
+  currentPage.value = relevants
+
+  if (!relevants || relevants.empty) {
+    return []
+  }
+
+  return relevants.content
+}
+
+async function loadRecentsTopics(): Promise<Topic[]> {
+  const recents = await topicStore.fetchTopics({ page: page.value })
+  currentPage.value = recents
+
+  console.log('lastValue: ', contentTopics.value)
+
+  if (!recents || recents.empty) {
+    console.log('Is empty')
+    return []
+  }
+
+  return recents.content
+}
+
+async function loadTopics() {
+  loading.value = true
+  let topics: Topic[] = []
+  if (selectedTab.value === 0) {
+    topics = await loadRelevantsTopics()
+  } else {
+    topics = await loadRecentsTopics()
+  }
+
+  gsap.fromTo(
+    '.feed-content',
+    {
+      opacity: 0.5,
+    },
+    {
+      duration: 0.5,
+      ease: 'power1.out',
+      opacity: 1,
+    },
+  )
+
+  contentTopics.value = contentTopics.value.concat(topics)
+  loading.value = false
+}
+
+function handleScroll(_e: unknown) {
+  const element = componentScroller.value
+  if (element && element.getBoundingClientRect().bottom < window.innerHeight - 30) {
+    if (!currentPage.value?.last) {
+      page.value++
+      loadTopics()
+    }
+  }
+}
+
+onMounted(async () => {
+  await loadTopics()
+
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+async function selectTab(index: number) {
+  if (selectedTab.value === index) return
+  contentTopics.value = []
+  page.value = 0
+  currentPage.value = null
   selectedTab.value = index
+  await loadTopics()
 }
 </script>
 
@@ -23,6 +110,14 @@ function selectTab(index: number) {
         <button class="add">+</button>
       </div>
     </header>
+    <section class="feed-content" ref="componentScroller">
+      <template v-if="contentTopics">
+        <CardTopicComponent v-for="topic in contentTopics" :key="topic.id" :topic="topic" />
+      </template>
+      <template v-if="loading">
+        <SkeletonComponent v-for="topic in [1, 2, 3, 4, 5]" :key="topic" />
+      </template>
+    </section>
   </main>
 </template>
 
@@ -40,6 +135,7 @@ function selectTab(index: number) {
   }
 
   @include media('mobile') {
+    padding: 100px 16px;
     .feed-actions {
       button {
         display: none;
@@ -83,6 +179,13 @@ function selectTab(index: number) {
         display: none;
       }
     }
+  }
+
+  .feed-content {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 }
 </style>

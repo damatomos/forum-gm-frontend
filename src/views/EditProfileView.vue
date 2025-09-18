@@ -2,7 +2,7 @@
 
 <template>
   <main>
-    <h1 ref="title">Hello World</h1>
+    <h1 ref="title">Edit Profile</h1>
   </main>
 </template>
 
