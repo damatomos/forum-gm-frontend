@@ -7,9 +7,13 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'danger'
 }
 
-const props = defineProps<ButtonProps>()
+withDefaults(defineProps<ButtonProps>(), {
+  variant: 'primary',
+})
 
-const emit = defineEmits(['click'])
+const emit = defineEmits<{
+  (e: 'click'): void
+}>()
 
 const btnRef = ref<HTMLElement | null>(null)
 
@@ -18,6 +22,7 @@ function handleClick() {
 }
 
 function onDown() {
+  if (!btnRef.value) return
   gsap.to(btnRef.value, {
     scaleX: 1,
     scaleY: 1,
@@ -27,6 +32,7 @@ function onDown() {
 }
 
 function onUp() {
+  if (!btnRef.value) return
   gsap.to(btnRef.value, {
     scaleX: 1.1,
     scaleY: 0.9,
@@ -36,6 +42,7 @@ function onUp() {
 }
 
 function onHover() {
+  if (!btnRef.value) return
   gsap.to(btnRef.value, {
     scaleX: 1.1,
     scaleY: 0.9,
@@ -45,6 +52,7 @@ function onHover() {
 }
 
 function onLeave() {
+  if (!btnRef.value) return
   gsap.to(btnRef.value, {
     scaleX: 1,
     scaleY: 1,
@@ -64,7 +72,7 @@ function onLeave() {
     @mousedown="onDown"
     @mouseup="onUp"
   >
-    {{ props.title }}
+    {{ title }}
   </button>
 </template>
 

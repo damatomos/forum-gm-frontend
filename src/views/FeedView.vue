@@ -106,8 +106,12 @@ async function selectTab(index: number) {
         <TabComponent label="Recentes" :is-active="selectedTab === 1" @click="selectTab(1)" />
       </div>
       <div class="feed-actions">
-        <button>Criar tópico</button>
-        <button class="add">+</button>
+        <RouterLink to="topic/create">
+          <button>Criar tópico</button>
+        </RouterLink>
+        <RouterLink to="topic/create">
+          <button class="add">+</button>
+        </RouterLink>
       </div>
     </header>
     <section class="feed-content" ref="componentScroller">

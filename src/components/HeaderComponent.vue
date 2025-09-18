@@ -2,10 +2,10 @@
 import { useRouter } from 'vue-router'
 import ButtonElasticComponent from './ButtonElasticComponent.vue'
 import GMPointIcon from './icons/GMPointIcon.vue'
-import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
 
 const route = useRouter()
-const user = useUserStore()
+const auth = useAuthStore()
 
 function handleSignIn() {
   route.push({
@@ -17,14 +17,14 @@ function handleSignIn() {
 <template>
   <header class="header">
     <span class="logo">ForumGM</span>
-    <span class="gm-points" v-if="user.isLogged"> <GMPointIcon />850</span>
+    <span class="gm-points" v-if="auth.isAuthenticated"> <GMPointIcon />850</span>
     <ButtonElasticComponent
       title="Sign In"
       variant="primary"
       @click="handleSignIn"
-      v-if="!user.isLogged"
+      v-if="!auth.isAuthenticated"
     />
-    <div v-if="user.isLogged" class="user-navigation">
+    <div v-if="auth.isAuthenticated" class="user-navigation">
       <img
         src="https://www.bing.com/th/id/OIP.b3zlBrTh1y8Wy-IXr5VdWgHaHa?w=196&h=211&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
         alt=""
