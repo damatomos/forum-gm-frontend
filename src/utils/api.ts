@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getToken, removeToken } from '@/utils/auth/token'
-import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',
@@ -19,7 +19,7 @@ api.interceptors.response.use(
     if (err.response?.status === 401 || err.response?.status === 500) {
       console.log('⛔ Erro de autenticação, deslogando...')
       removeToken()
-      useUserStore().logout()
+      useAuthStore().logout()
     }
     return Promise.reject(err)
   },
