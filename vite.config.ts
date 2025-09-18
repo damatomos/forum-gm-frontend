@@ -7,7 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/forumgm/',
+  base: '/forum-gm-frontend/',
   plugins: [vue(), vueJsx(), vueDevTools()],
   resolve: {
     alias: {
