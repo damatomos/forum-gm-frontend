@@ -17,11 +17,11 @@ const { handleSubmit, errors, defineField } = useForm({
       .required('Email é um campo obrigatório'),
     password: yup
       .string()
-      .matches(/^[0-9a-zA-Z$*&@#.]{8,}.*$/, 'deve conter ao menos 8 caracteres')
+      .matches(/^[0-9a-zA-Z$*&@#_.]{8,}.*$/, 'deve conter ao menos 8 caracteres')
       .matches(/^(?=.*\d).*$/, 'deve conter ao menos um número')
       .matches(/^(?=.*[a-z]).*$/, 'deve conter ao menos uma letra minúscula')
       .matches(/^(?=.*[A-Z]).*$/, 'deve conter ao menos uma letra maiúscula')
-      .matches(/^(?=.*[$*&@#.]).*$/, 'deve conter ao menos um caractere especial')
+      .matches(/^(?=.*[$*&@#_.]).*$/, 'deve conter ao menos um caractere especial')
       .required('Senha é um campo obrigatório'),
   }),
 })
