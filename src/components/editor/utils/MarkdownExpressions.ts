@@ -208,7 +208,6 @@ export function parseImageMarkdown(text: string) {
   if (text[pos] !== ')') return null
   pos++
 
-  // Captura dimensões opcionais
   let width, height
 
   const dimFormmat = text.slice(pos).trim()

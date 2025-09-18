@@ -99,8 +99,6 @@ async function getElementByWrapper(wrapper: LineWrapper): Promise<HTMLElement> {
     currentElement.appendChild(await getElementByWrapper(wrapper.children))
   }
 
-  console.log(currentElement)
-
   return currentElement
 }
 
@@ -137,9 +135,7 @@ function getWrapperByLine(value: string): LineWrapper | null {
 
   value = cleanHorizontalMarkers(value, horizontalPosition)
 
-  const imageMatch = parseImageMarkdown(value) //value.match(MarkdownRegex.image)
-
-  console.log(imageMatch)
+  const imageMatch = parseImageMarkdown(value)
 
   if (imageMatch) {
     const img = {

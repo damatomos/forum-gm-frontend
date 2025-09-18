@@ -89,6 +89,7 @@ const apply = (type: SymbolType) => {
   const before = markdown.value.slice(0, start)
   const after = markdown.value.slice(end)
   let newText = removeIfDontUse(before, after, type)!
+  console.log('newText: ', newText)
 
   if (newText !== null) {
     markdown.value = newText
@@ -108,7 +109,7 @@ const apply = (type: SymbolType) => {
     editor.value!.focus()
     if (!selectedText) {
       // move cursor between the symbols
-      const cursorPos = start + type.toString().length
+      const cursorPos = start + (type == SymbolType.ALIGNCENTER ? 1 : type.toString().length)
       editor.value!.setSelectionRange(cursorPos, cursorPos)
     } else {
       editor.value!.setSelectionRange(start, start + newText.length)
