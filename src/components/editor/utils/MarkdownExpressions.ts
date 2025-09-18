@@ -1,4 +1,5 @@
 import { SymbolType } from './MarkdownFormatter'
+import { MarkdownRegex } from './MarkdownRegex'
 
 export function removeMarkdownSyntaxBetweenText(
   before: string,
@@ -27,13 +28,13 @@ export function convertTextToMarkdown(type: SymbolType, text: string): string {
     return convertListTypeToMarkdown(type, text)
   } else {
     if (type == SymbolType.LINK) {
-      if (/\[(.+?)\]\((.+?)\)/g.test(text)) {
-        return text.replace(/\[(.+?)\]\((.+?)\)/g, '$1')
+      if (MarkdownRegex.link.test(text)) {
+        return text.replace(MarkdownRegex.link, '$1')
       }
       return `[${text}](url)`
     } else if (type == SymbolType.IMAGE) {
-      if (/\!\[(.+?)\]\((.+?)\)/g.test(text)) {
-        return text.replace(/\!\[(.+?)\]\((.+?)\)/g, '$1')
+      if (MarkdownRegex.image.test(text)) {
+        return text.replace(MarkdownRegex.image, '$1')
       }
       return `![${text}](url)`
     }
@@ -180,4 +181,55 @@ export function getLastLine(text: string): string {
 export function lastLineIsEmptyList(text: string): boolean {
   const lastLine = getLastLine(text)
   return lastLine === '- ' || /^\d+\. $/.test(lastLine)
+}
+
+export function parseImageMarkdown(text: string) {
+  const maxAltLength = 100
+  const maxUrlLength = 200
+  const maxDimension = 9999
+
+  if (!text.startsWith('![')) return null
+
+  let pos = 2
+  let alt = ''
+
+  while (pos < text.length && text[pos] !== ']' && alt.length < maxAltLength) {
+    alt += text[pos++]
+  }
+
+  if (text[pos] !== ']' || text[pos + 1] !== '(') return null
+  pos += 2
+
+  let url = ''
+  while (pos < text.length && text[pos] !== ')' && url.length < maxUrlLength) {
+    url += text[pos++]
+  }
+
+  if (text[pos] !== ')') return null
+  pos++
+
+  // Captura dimensões opcionais
+  let width, height
+
+  const dimFormmat = text.slice(pos).trim()
+
+  if (dimFormmat.startsWith('{') && dimFormmat.endsWith('}')) {
+    console.log('pos: ', text.slice(pos))
+    const dimensions = dimFormmat
+      .replace('{', '')
+      .replace('}', '')
+      .split(',')
+      .map((d) => Number(d.trim()))
+
+    console.log(dimensions)
+    if (dimensions) {
+      width = dimensions[0]
+      height = dimensions[1]
+
+      if (width && (isNaN(width) || width < 1 || width > maxDimension)) return null
+      if (height && (isNaN(height) || height < 1 || height > maxDimension)) return null
+    }
+  }
+
+  return { alt, url, width, height }
 }

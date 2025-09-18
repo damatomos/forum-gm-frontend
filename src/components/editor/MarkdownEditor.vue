@@ -58,19 +58,19 @@ const toggleMode = async () => {
     editor.value?.focus()
   } else {
     await nextTick()
-    updatePreview()
+    await updatePreview()
   }
 }
 
-const updatePreview = () => {
+const updatePreview = async () => {
   if (preview.value) {
     preview.value.innerHTML = ''
     const lines = markdown.value.split('\n')
 
     if (lines && lines.length > 0) {
-      const elements = formatter(lines)
+      const elements = await formatter(lines)
 
-      elements.forEach((e) => {
+      elements.forEach(async (e) => {
         preview.value?.appendChild(e)
       })
     }
@@ -130,8 +130,8 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
     <button @click="toggleMode">Preview</button>
   </div> -->
   <MarkdownEditorTools
-    @formatter="(type) => apply(type)"
-    @align="(type) => apply(type)"
+    @formatter="(type: SymbolType) => apply(type)"
+    @align="(type: SymbolType) => apply(type)"
     @preview="toggleMode"
     :is-preview="isPreview"
   />
@@ -181,6 +181,11 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
 
     s * {
       text-decoration: line-through;
+    }
+
+    a {
+      color: $link-color;
+      text-decoration: underline;
     }
   }
 }
