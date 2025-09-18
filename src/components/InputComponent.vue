@@ -9,23 +9,32 @@ interface Props {
   type: string
 }
 
-const model = defineModel()
-const props = defineProps<Props>()
+defineEmits(['change', 'input', 'blur'])
+
+const model = defineModel<string>()
+const props = withDefaults(defineProps<Props>(), {
+  width: '100%',
+  variant: 'common',
+  maxLength: 255,
+  type: 'text',
+})
 </script>
 
 <template>
-  <label :for="props.id" :class="{ 'label-auth': props.variant == 'auth' }">{{ label }}</label>
+  <label :for="props.id" :class="{ 'label-auth': props.variant == 'auth' }">{{
+    props.label
+  }}</label>
   <div class="container-input" :style="{ width: `${props.width}px` || '100%' }">
     <input
       v-model="model"
-      :class="[variant ? variant : 'common']"
+      :class="[props.variant]"
       :type="type"
       :placeholder="placeholder"
       :maxlength="maxLength"
       :id="props.id"
     />
     <img v-if="props.variant === 'send'" src="/icons/PaperPlaneRight.svg" alt="button push" />
-    <span v-if="props.variant === 'common-number'">{{ model.length }}/{{ maxLength }}</span>
+    <span v-if="props.variant === 'common-number'">{{ model!.length }}/{{ maxLength }}</span>
   </div>
 </template>
 
