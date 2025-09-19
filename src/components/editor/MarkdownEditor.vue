@@ -106,7 +106,6 @@ const apply = (type: SymbolType) => {
   markdown.value = before + newText + after
 
   nextTick(() => {
-    editor.value!.focus()
     if (!selectedText) {
       // move cursor between the symbols
       const cursorPos = start + (type == SymbolType.ALIGNCENTER ? 1 : type.toString().length)
@@ -114,6 +113,7 @@ const apply = (type: SymbolType) => {
     } else {
       editor.value!.setSelectionRange(start, start + newText.length)
     }
+    editor.value!.focus()
   })
 }
 
@@ -123,13 +123,6 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
 </script>
 
 <template>
-  <!-- <div class="toolbar">
-    <div class="tools">
-      <button @click="apply(SymbolType.BOLD)">Bold</button>
-      <button>Italic</button>
-    </div>
-    <button @click="toggleMode">Preview</button>
-  </div> -->
   <MarkdownEditorTools
     @formatter="(type: SymbolType) => apply(type)"
     @align="(type: SymbolType) => apply(type)"
@@ -188,21 +181,6 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
       color: $link-color;
       text-decoration: underline;
     }
-  }
-}
-
-.toolbar {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .tools {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
   }
 }
 </style>
