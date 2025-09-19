@@ -4,6 +4,8 @@ import BackButtonIcon from '@/components/icons/BackButtonIcon.vue'
 import { RouterLink } from 'vue-router'
 
 import MarkdownEditor from '@/components/editor/MarkdownEditor.vue'
+import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
+import InputComponent from '@/components/InputComponent.vue'
 </script>
 
 <template>
@@ -15,10 +17,14 @@ import MarkdownEditor from '@/components/editor/MarkdownEditor.vue'
         <RouterLink to="/">
           <BackButtonIcon />
         </RouterLink>
-        <button>Publicar</button>
+        <ButtonSimpleComponent class="btn-publish"  content="Publicar" variant="purple" />
       </header>
 
       <div class="editor">
+        <InputComponent
+          placeholder="Título"
+          variant="topic-title"
+        />
         <MarkdownEditor />
       </div>
     </div>
@@ -63,6 +69,12 @@ main {
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      .btn-publish {
+        max-width: fit-content;
+        width: auto;
+        padding: 0.625rem 1.5rem;
+      }
     }
 
     .editor {

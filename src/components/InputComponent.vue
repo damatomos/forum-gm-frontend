@@ -3,10 +3,10 @@ interface Props {
   width?: string | number
   label?: string
   id?: string
-  variant?: 'auth' | 'send' | 'common-number' | 'common'
+  variant?: 'auth' | 'send' | 'common-number' | 'common' | 'topic-title'
   placeholder?: string
   maxLength?: number | string
-  type: string
+  type?: HTMLInputElement['type']
 }
 
 defineEmits(['change', 'input', 'blur'])
@@ -25,14 +25,8 @@ const props = withDefaults(defineProps<Props>(), {
     props.label
   }}</label>
   <div class="container-input" :style="{ width: `${props.width}px` || '100%' }">
-    <input
-      v-model="model"
-      :class="[props.variant]"
-      :type="type"
-      :placeholder="placeholder"
-      :maxlength="maxLength"
-      :id="props.id"
-    />
+    <input v-model="model" :class="[props.variant]" :type="type" :placeholder="placeholder" :maxlength="maxLength"
+      :id="props.id" />
     <img v-if="props.variant === 'send'" src="/icons/PaperPlaneRight.svg" alt="button push" />
     <span v-if="props.variant === 'common-number'">{{ model!.length }}/{{ maxLength }}</span>
   </div>
@@ -97,26 +91,53 @@ label {
     bottom: 0;
     right: 0.625rem;
   }
+
+  .topic-title {
+    font-size: $font-size-5xl;
+    font-weight: 600;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid $gm-c-divider-light-1;
+    transition: 0.2s linear;
+    margin-bottom: 1rem;
+
+    &::placeholder {
+      color: $color-placeholder;
+      font-weight: 500;
+    }
+
+    &:focus {
+      font-size: $font-size-6xl;
+      padding: 0.75rem 0;
+    }
+  }
 }
+
+
 
 @include media('tablet') {
   label {
     font-size: $font-size-lg;
   }
+
   .container-input {
     input {
       font-size: $font-size-base;
     }
+
     img {
       width: 20px;
       height: 20px;
     }
   }
 }
+
 @include media('mobile') {
   label {
     font-size: $font-size-base;
   }
+
   img {
     width: 18px;
     height: 18px;
