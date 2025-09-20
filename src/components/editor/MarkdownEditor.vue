@@ -18,7 +18,7 @@ const preview = ref<HTMLDivElement>()
 
 const isPreview = ref<boolean>(false)
 
-onMounted(() => {})
+onMounted(() => { })
 
 const onChange = (event: Event) => {
   const target = event.target as HTMLTextAreaElement
@@ -31,22 +31,47 @@ const onKeyUp = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
     const target = event.target as HTMLTextAreaElement
 
-    if (lastLineIsOrderedList(target.value)) {
-      const index = getNumberOfOrderedList(target.value)
+    const cursorPos = target.selectionStart
+
+    const before = target.value.slice(0, cursorPos)
+    const after = target.value.slice(cursorPos)
+
+    console.log("position: ", cursorPos)
+    console.log("before: \n", before)
+    console.log("\n after: \n", after)
+
+    let content = '';
+
+    if (lastLineIsOrderedList(before)) {
+      console.log("changing")
+      const index = getNumberOfOrderedList(before)
       console.log('value: ', index)
-      target.value += `${index + 1}. `
-    } else if (lastLineIsUnOrderedList(target.value)) {
-      target.value += '- '
+      content = `${index + 1}. `
+      target.value = before + content + after
+
+    } else if (lastLineIsUnOrderedList(before)) {
+      content = `- `
+      target.value = before + content + after
     }
+    target.selectionStart = target.selectionEnd = cursorPos + content.length
+    target.focus()
   }
 }
 
 const onKeyPress = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
     const target = event.target as HTMLTextAreaElement
-    if (lastLineIsEmptyList(target.value)) {
-      const lastLine = getLastLine(target.value)
-      target.value = target.value.slice(0, target.value.length - lastLine.length)
+
+    const cursorPos = target.selectionStart
+    const before = target.value.slice(0, cursorPos)
+    const after = target.value.slice(cursorPos)
+
+    if (lastLineIsEmptyList(before)) {
+      const lastLine = getLastLine(before)
+      target.value = before.slice(0, before.length - lastLine.length) + after
+
+      target.selectionStart = target.selectionEnd = cursorPos - lastLine.length
+      target.focus()
     }
   }
 }
@@ -124,23 +149,10 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
 </script>
 
 <template>
-  <MarkdownEditorTools
-    @formatter="(type: SymbolType) => apply(type)"
-    @align="(type: SymbolType) => apply(type)"
-    @preview="toggleMode"
-    :is-preview="isPreview"
-  />
-  <textarea
-    v-if="!isPreview"
-    ref="editor"
-    name="editor"
-    id="editor"
-    v-model="markdown"
-    @input="onChange"
-    @change="onChange"
-    @keyup="onKeyUp"
-    @keypress="onKeyPress"
-  ></textarea>
+  <MarkdownEditorTools @formatter="(type: SymbolType) => apply(type)" @align="(type: SymbolType) => apply(type)"
+    @preview="toggleMode" :is-preview="isPreview" />
+  <textarea v-if="!isPreview" ref="editor" name="editor" id="editor" v-model="markdown" @input="onChange"
+    @change="onChange" @keyup="onKeyUp" @keypress="onKeyPress"></textarea>
   <div v-else id="preview" ref="preview"></div>
 </template>
 
@@ -159,15 +171,13 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
 #preview {
   word-break: break-all;
 
-  :deep(ul)
-  {
+  :deep(ul) {
     list-style: unset;
     display: unset;
     list-style-position: inside;
   }
 
-  :deep(ol)
-  {
+  :deep(ol) {
     padding: unset;
     margin: unset;
     display: unset;
