@@ -38,6 +38,8 @@ export const MarkdownRegex = {
   breakline: /\n/g,
 
   multipleSpaces: /\s{2,}/g,
+
+  line: /---/
 }
 
 export function checkAllRegexHealth() {

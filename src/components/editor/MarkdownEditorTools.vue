@@ -105,10 +105,10 @@ onBeforeUnmount(() => {
         </span>
       </div>
       <div class="text-list tool-list">
-        <span class="tool unorder-list" @click="emit('formatter', SymbolType.UNORDEREDLIST)">
+        <span class="tool unorder-list" @click="emit('formatter', SymbolType.UNORDERED_LIST_ITEM)">
           <UnorderListIcon />
         </span>
-        <span class="tool order-list" @click="emit('formatter', SymbolType.ORDEREDLIST)">
+        <span class="tool order-list" @click="emit('formatter', SymbolType.ORDERED_LIST_ITEM)">
           <NumberOrderListIcon />
         </span>
       </div>

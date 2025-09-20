@@ -44,12 +44,12 @@ export function convertTextToMarkdown(type: SymbolType, text: string): string {
 }
 
 export function convertListTypeToMarkdown(type: SymbolType, text: string): string {
-  if (type == SymbolType.UNORDEREDLIST) {
+  if (type == SymbolType.UNORDERED_LIST_ITEM) {
     if (/^- (.+?)/g.test(text)) {
       return text.replace(/^- \s*/g, '')
     }
     return `- ${text}`
-  } else if (type == SymbolType.ORDEREDLIST) {
+  } else if (type == SymbolType.ORDERED_LIST_ITEM) {
     if (/^\d+\. (.+?)/g.test(text)) {
       return text.replace(/^\d+\. \s*/g, '')
     }
@@ -127,7 +127,7 @@ export function convertAlignTextToMarkdown(type: SymbolType, text: string): stri
 }
 
 export function isListType(type: SymbolType) {
-  return type === SymbolType.ORDEREDLIST || type === SymbolType.UNORDEREDLIST
+  return type === SymbolType.ORDERED_LIST_ITEM || type === SymbolType.UNORDERED_LIST_ITEM
 }
 
 export function isTextType(type: SymbolType) {

@@ -68,6 +68,7 @@ const updatePreview = async () => {
     const lines = markdown.value.split('\n')
 
     if (lines && lines.length > 0) {
+      console.log(lines)
       const elements = await formatter(lines)
 
       elements.forEach(async (e) => {
@@ -158,8 +159,23 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
 #preview {
   word-break: break-all;
 
+  :deep(ul)
+  {
+    list-style: unset;
+    display: unset;
+    list-style-position: inside;
+  }
+
+  :deep(ol)
+  {
+    padding: unset;
+    margin: unset;
+    display: unset;
+    list-style-position: inside;
+  }
+
   :deep(p) {
-    margin: 8px 0;
+    min-height: 1.25em;
 
     strong * {
       font-weight: bold;
