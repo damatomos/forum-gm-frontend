@@ -19,13 +19,15 @@ export function removeMarkdownSyntaxBetweenText(
   return before + after === currentText ? null : before + after
 }
 
-export function convertTextToMarkdown(type: SymbolType, text: string): string {
+export function convertTextToMarkdownFormat(type: SymbolType, text: string): string {
   if (isAlignType(type)) {
-    return convertAlignTextToMarkdown(type, text)
+    return convertAlignTextToMarkdownFormat(type, text)
   } else if (isTextType(type)) {
-    return convertTextTypeToMarkdown(type, text)
-  } else if (isListType(type)) {
-    return convertListTypeToMarkdown(type, text)
+    return convertTextTypeToMarkdownFormat(type, text)
+  } else if (isUnorderedList(type)) {
+    return convertUnorderedListToMarkdownFormat(type, text)
+  } else if (isOrderedList(type)) {
+    return convertOrderedListToMarkdownFormat(type, text)
   } else {
     if (type == SymbolType.LINK) {
       if (MarkdownRegex.link.test(text)) {
@@ -43,7 +45,41 @@ export function convertTextToMarkdown(type: SymbolType, text: string): string {
   return text
 }
 
-export function convertListTypeToMarkdown(type: SymbolType, text: string): string {
+export function convertOrderedListToMarkdownFormat(type: SymbolType, text: string): string {
+  let lines = text.split('\n')
+  const containsFormat = /^\d+\. (.+?)/g.test(text)
+  let result = text
+
+  if (lines.length > 1) {
+    lines = lines.map((line, idx) => {
+      if (/^\d+\. (.+?)/g.test(line)) {
+        console.log('has')
+        line = line.replace(/^\d+\.\s*/g, '')
+      }
+
+      return line + (idx < lines.length - 1 ? '\n' : '')
+    })
+
+    result = lines.reduce((prev, line) => prev + line)
+
+    if (!containsFormat) {
+      result = lines.reduce((prev, line, idx) => {
+        if (idx == 1) {
+          prev = `${idx}. ${prev}`
+        }
+
+        const start = prev ? prev : ''
+        return start + `${idx + 1}. ${line}`
+      })
+    }
+  } else {
+    result = `1. ${lines[0]}`
+  }
+
+  return result
+}
+
+export function convertUnorderedListToMarkdownFormat(type: SymbolType, text: string): string {
   if (type == SymbolType.UNORDERED_LIST_ITEM) {
     if (/^- (.+?)/g.test(text)) {
       return text.replace(/^- \s*/g, '')
@@ -58,7 +94,7 @@ export function convertListTypeToMarkdown(type: SymbolType, text: string): strin
   return text
 }
 
-export function convertTextTypeToMarkdown(type: SymbolType, text: string): string {
+export function convertTextTypeToMarkdownFormat(type: SymbolType, text: string): string {
   if (type == SymbolType.BOLD) {
     if (/\*\*(.+?)\*\*/g.test(text)) {
       return text.replace(/\*\*\s*/g, '').replace(/\s*\*\*$/g, '')
@@ -84,7 +120,7 @@ export function convertTextTypeToMarkdown(type: SymbolType, text: string): strin
   return text
 }
 
-export function convertAlignTextToMarkdown(type: SymbolType, text: string): string {
+export function convertAlignTextToMarkdownFormat(type: SymbolType, text: string): string {
   if (type == SymbolType.ALIGNLEFT) {
     if (/(.+?)</g.test(text) && !/>(.+?)</g.test(text) && !/>(.+?)/g.test(text)) {
       return text.replace(/\s*</g, '')
@@ -124,6 +160,14 @@ export function convertAlignTextToMarkdown(type: SymbolType, text: string): stri
   }
 
   return text
+}
+
+export function isUnorderedList(type: SymbolType) {
+  return type === SymbolType.UNORDERED_LIST_ITEM
+}
+
+export function isOrderedList(type: SymbolType) {
+  return type === SymbolType.ORDERED_LIST_ITEM
 }
 
 export function isListType(type: SymbolType) {

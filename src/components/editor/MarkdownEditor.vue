@@ -3,7 +3,7 @@ import { nextTick, onMounted, ref } from 'vue'
 import { formatter, SymbolType } from './utils/MarkdownFormatter'
 import MarkdownEditorTools from './MarkdownEditorTools.vue'
 import {
-  convertTextToMarkdown,
+  convertTextToMarkdownFormat,
   getLastLine,
   getNumberOfOrderedList,
   lastLineIsEmptyList,
@@ -128,7 +128,7 @@ const apply = (type: SymbolType) => {
     return
   }
 
-  newText = convertTextToMarkdown(type, selectedText)
+  newText = convertTextToMarkdownFormat(type, selectedText)
   markdown.value = before + newText + after
 
   nextTick(() => {
