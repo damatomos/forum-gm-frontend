@@ -52,9 +52,9 @@ export function convertOrderedListToMarkdownFormat(type: SymbolType, text: strin
 
   if (lines.length > 1) {
     lines = lines.map((line, idx) => {
-      if (/^\d+\. (.+?)/g.test(line)) {
+      if (/^\d+\. (.+?)/.test(line)) {
         console.log('has')
-        line = line.replace(/^\d+\.\s*/g, '')
+        line = line.replace(/^\d+\.\s*/, '')
       }
 
       return line + (idx < lines.length - 1 ? '\n' : '')
@@ -80,18 +80,35 @@ export function convertOrderedListToMarkdownFormat(type: SymbolType, text: strin
 }
 
 export function convertUnorderedListToMarkdownFormat(type: SymbolType, text: string): string {
-  if (type == SymbolType.UNORDERED_LIST_ITEM) {
-    if (/^- (.+?)/g.test(text)) {
-      return text.replace(/^- \s*/g, '')
+  let lines = text.split('\n')
+  const containsFormat = /^- (.+?)/g.test(text)
+  let result = text
+
+  if (lines.length > 1) {
+    lines = lines.map((line, idx) => {
+      if (/^- (.+?)/.test(line)) {
+        line = line.replace(/^-\s*/, '')
+      }
+      return line + (idx < lines.length - 1 ? '\n' : '')
+    })
+
+    result = lines.reduce((prev, line) => prev + line)
+
+    if (!containsFormat) {
+      result = lines.reduce((prev, line, idx) => {
+        if (idx == 1) {
+          prev = `- ${prev}`
+        }
+
+        const start = prev ? prev : ''
+        return start + `- ${line}`
+      })
     }
-    return `- ${text}`
-  } else if (type == SymbolType.ORDERED_LIST_ITEM) {
-    if (/^\d+\. (.+?)/g.test(text)) {
-      return text.replace(/^\d+\. \s*/g, '')
-    }
-    return `1. ${text}`
+  } else {
+    result = `- ${lines[0]}`
   }
-  return text
+
+  return result
 }
 
 export function convertTextTypeToMarkdownFormat(type: SymbolType, text: string): string {
