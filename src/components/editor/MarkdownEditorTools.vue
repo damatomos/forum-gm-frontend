@@ -131,7 +131,7 @@ onBeforeUnmount(() => {
   border-radius: 10px;
   border-bottom: 1px solid $tool-separator;
   padding: 12px 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 
   .tools {
     display: flex;
@@ -206,5 +206,6 @@ onBeforeUnmount(() => {
       background-color: $tool-enabled;
     }
   }
+
 }
 </style>

@@ -6,6 +6,30 @@ import { RouterLink } from 'vue-router'
 import MarkdownEditor from '@/components/editor/MarkdownEditor.vue'
 import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
 import InputComponent from '@/components/InputComponent.vue'
+import { useForm } from 'vee-validate'
+import * as yup from 'yup'
+
+const { handleSubmit, errors, defineField } = useForm({
+  validationSchema: yup.object({
+    title: yup
+      .string()
+      // .min(10, 'O título deve conter pelo menos 10 caracteres')
+      .required('O título é obrigatório'),
+    markdown: yup
+      .string()
+      // .min(200, 'O tópico deve conter pelo menos 200 caracteres')
+      // .required('O campo não pode ser vazio'),
+  }),
+})
+
+const [title, titleAttrs] = defineField('title', { validateOnModelUpdate: false })
+const [markdown, markdownAttrs] = defineField('markdown', { validateOnModelUpdate: false, })
+
+const onSubmit = handleSubmit((value) => {
+  console.log(value)
+})
+
+
 </script>
 
 <template>
@@ -17,15 +41,13 @@ import InputComponent from '@/components/InputComponent.vue'
         <RouterLink to="/">
           <BackButtonIcon />
         </RouterLink>
-        <ButtonSimpleComponent class="btn-publish"  content="Publicar" variant="purple" />
+        <ButtonSimpleComponent class="btn-publish" content="Publicar" variant="rose" @click="onSubmit" />
       </header>
 
       <div class="editor">
-        <InputComponent
-          placeholder="Título"
-          variant="topic-title"
-        />
-        <MarkdownEditor />
+        <InputComponent placeholder="Título" variant="topic-title" v-model="title" v-bind="titleAttrs" />
+        <span class="title-error" v-if="errors.title">{{ errors.title }}</span>
+        <MarkdownEditor v-model="markdown" v-bind="markdownAttrs" />
       </div>
     </div>
   </main>
@@ -37,6 +59,7 @@ main {
   margin: 0 auto;
   width: 100%;
   min-height: calc(100dvh - 50px);
+
   .background {
     position: absolute;
     top: 0;
@@ -74,6 +97,10 @@ main {
         max-width: fit-content;
         width: auto;
         padding: 0.625rem 1.5rem;
+
+        &:hover {
+          scale: 1.05;
+        }
       }
     }
 
@@ -82,6 +109,11 @@ main {
       width: 100%;
       background: white;
       padding: 1rem 2rem;
+
+      & .title-error {
+        font-size: $font-size-xl;
+        color: $color-error;
+      }
     }
   }
 }

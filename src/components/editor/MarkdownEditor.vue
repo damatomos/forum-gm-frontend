@@ -13,7 +13,7 @@ import {
 } from './utils/MarkdownExpressions'
 
 const editor = ref<HTMLTextAreaElement>()
-const markdown = ref<string>('')
+const markdown = defineModel<string>()
 const preview = ref<HTMLDivElement>()
 
 const isPreview = ref<boolean>(false)
@@ -36,16 +36,10 @@ const onKeyUp = (event: KeyboardEvent) => {
     const before = target.value.slice(0, cursorPos)
     const after = target.value.slice(cursorPos)
 
-    console.log("position: ", cursorPos)
-    console.log("before: \n", before)
-    console.log("\n after: \n", after)
-
     let content = '';
 
     if (lastLineIsOrderedList(before)) {
-      console.log("changing")
       const index = getNumberOfOrderedList(before)
-      console.log('value: ', index)
       content = `${index + 1}. `
       target.value = before + content + after
 
@@ -79,7 +73,6 @@ const onKeyPress = (event: KeyboardEvent) => {
 const toggleMode = async () => {
   isPreview.value = !isPreview.value
   if (!editor.value?.checkVisibility()) {
-    console.log('visible')
     editor.value?.focus()
   } else {
     await nextTick()
@@ -90,10 +83,9 @@ const toggleMode = async () => {
 const updatePreview = async () => {
   if (preview.value) {
     preview.value.innerHTML = ''
-    const lines = markdown.value.split('\n')
+    const lines = markdown.value!.toString().split('\n')
 
     if (lines && lines.length > 0) {
-      console.log(lines)
       const elements = await formatter(lines)
 
       elements.forEach(async (e) => {
@@ -111,11 +103,10 @@ const apply = (type: SymbolType) => {
 
   // if (start == end) return
 
-  const selectedText = markdown.value.slice(start, end)
-  const before = markdown.value.slice(0, start)
-  const after = markdown.value.slice(end)
+  const selectedText = markdown.value!.slice(start, end)
+  const before = markdown.value!.slice(0, start)
+  const after = markdown.value!.slice(end)
   let newText = removeIfDontUse(before, after, type)!
-  console.log('newText: ', newText)
 
   if (newText !== null) {
     markdown.value = newText
