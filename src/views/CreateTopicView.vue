@@ -8,6 +8,8 @@ import ButtonSimpleComponent from '@/components/ButtonSimpleComponent.vue'
 import InputComponent from '@/components/InputComponent.vue'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
+import SelectComponent, { type OptionType } from '@/components/SelectComponent.vue'
+import { ref } from 'vue'
 
 const { handleSubmit, errors, defineField } = useForm({
   validationSchema: yup.object({
@@ -17,16 +19,31 @@ const { handleSubmit, errors, defineField } = useForm({
       .required('O título é obrigatório'),
     markdown: yup
       .string()
-      // .min(200, 'O tópico deve conter pelo menos 200 caracteres')
-      // .required('O campo não pode ser vazio'),
+    // .min(200, 'O tópico deve conter pelo menos 200 caracteres')
+    // .required('O campo não pode ser vazio'),
   }),
 })
 
 const [title, titleAttrs] = defineField('title', { validateOnModelUpdate: false })
 const [markdown, markdownAttrs] = defineField('markdown', { validateOnModelUpdate: false, })
 
+const timer = ref<string>('');
+const options = ref<OptionType[]>([
+  { label: '15 minutos', value: '15m' },
+  { label: '30 minutos', value: '30m' },
+  { label: '1 hora', value: '1h' },
+  { label: '2 horas', value: '2h' },
+  { label: '4 horas', value: '4h' },
+  { label: '8 horas (-2 gmp)', value: '8h' },
+  { label: '12 horas (-5 gmp)', value: '12h' },
+  { label: '1 dia (-10 gmp)', value: '1d' },
+  { label: '2 dias (-20 gmp)', value: '2d' },
+  { label: '3 dias (-30 gmp)', value: '3d' },
+])
+
 const onSubmit = handleSubmit((value) => {
-  console.log(value)
+  console.log(value);
+  console.log(timer.value)
 })
 
 
@@ -45,6 +62,7 @@ const onSubmit = handleSubmit((value) => {
       </header>
 
       <div class="editor">
+        <SelectComponent class="timer" :options="options" v-model="timer" label="Temporizador" />
         <InputComponent placeholder="Título" variant="topic-title" v-model="title" v-bind="titleAttrs" />
         <span class="title-error" v-if="errors.title">{{ errors.title }}</span>
         <MarkdownEditor v-model="markdown" v-bind="markdownAttrs" />
@@ -113,6 +131,10 @@ main {
       & .title-error {
         font-size: $font-size-xl;
         color: $color-error;
+      }
+
+      .timer {
+        justify-self: flex-end;
       }
     }
   }
