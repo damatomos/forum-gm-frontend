@@ -34,6 +34,8 @@ button {
   border: none;
   padding: 0.625rem 1rem;
   cursor: pointer;
+
+  transition: all 0.2s linear;
 }
 
 .rose {

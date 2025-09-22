@@ -3,7 +3,7 @@ import { nextTick, onMounted, ref } from 'vue'
 import { formatter, SymbolType } from './utils/MarkdownFormatter'
 import MarkdownEditorTools from './MarkdownEditorTools.vue'
 import {
-  convertTextToMarkdown,
+  convertTextToMarkdownFormat,
   getLastLine,
   getNumberOfOrderedList,
   lastLineIsEmptyList,
@@ -13,12 +13,12 @@ import {
 } from './utils/MarkdownExpressions'
 
 const editor = ref<HTMLTextAreaElement>()
-const markdown = ref<string>('')
+const markdown = defineModel<string>()
 const preview = ref<HTMLDivElement>()
 
 const isPreview = ref<boolean>(false)
 
-onMounted(() => {})
+onMounted(() => { })
 
 const onChange = (event: Event) => {
   const target = event.target as HTMLTextAreaElement
@@ -31,22 +31,41 @@ const onKeyUp = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
     const target = event.target as HTMLTextAreaElement
 
-    if (lastLineIsOrderedList(target.value)) {
-      const index = getNumberOfOrderedList(target.value)
-      console.log('value: ', index)
-      target.value += `${index + 1}. `
-    } else if (lastLineIsUnOrderedList(target.value)) {
-      target.value += '- '
+    const cursorPos = target.selectionStart
+
+    const before = target.value.slice(0, cursorPos)
+    const after = target.value.slice(cursorPos)
+
+    let content = '';
+
+    if (lastLineIsOrderedList(before)) {
+      const index = getNumberOfOrderedList(before)
+      content = `${index + 1}. `
+      target.value = before + content + after
+
+    } else if (lastLineIsUnOrderedList(before)) {
+      content = `- `
+      target.value = before + content + after
     }
+    target.selectionStart = target.selectionEnd = cursorPos + content.length
+    target.focus()
   }
 }
 
 const onKeyPress = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
     const target = event.target as HTMLTextAreaElement
-    if (lastLineIsEmptyList(target.value)) {
-      const lastLine = getLastLine(target.value)
-      target.value = target.value.slice(0, target.value.length - lastLine.length)
+
+    const cursorPos = target.selectionStart
+    const before = target.value.slice(0, cursorPos)
+    const after = target.value.slice(cursorPos)
+
+    if (lastLineIsEmptyList(before)) {
+      const lastLine = getLastLine(before)
+      target.value = before.slice(0, before.length - lastLine.length) + after
+
+      target.selectionStart = target.selectionEnd = cursorPos - lastLine.length
+      target.focus()
     }
   }
 }
@@ -54,7 +73,6 @@ const onKeyPress = (event: KeyboardEvent) => {
 const toggleMode = async () => {
   isPreview.value = !isPreview.value
   if (!editor.value?.checkVisibility()) {
-    console.log('visible')
     editor.value?.focus()
   } else {
     await nextTick()
@@ -65,7 +83,7 @@ const toggleMode = async () => {
 const updatePreview = async () => {
   if (preview.value) {
     preview.value.innerHTML = ''
-    const lines = markdown.value.split('\n')
+    const lines = markdown.value!.toString().split('\n')
 
     if (lines && lines.length > 0) {
       const elements = await formatter(lines)
@@ -85,11 +103,10 @@ const apply = (type: SymbolType) => {
 
   // if (start == end) return
 
-  const selectedText = markdown.value.slice(start, end)
-  const before = markdown.value.slice(0, start)
-  const after = markdown.value.slice(end)
+  const selectedText = markdown.value!.slice(start, end)
+  const before = markdown.value!.slice(0, start)
+  const after = markdown.value!.slice(end)
   let newText = removeIfDontUse(before, after, type)!
-  console.log('newText: ', newText)
 
   if (newText !== null) {
     markdown.value = newText
@@ -102,11 +119,10 @@ const apply = (type: SymbolType) => {
     return
   }
 
-  newText = convertTextToMarkdown(type, selectedText)
+  newText = convertTextToMarkdownFormat(type, selectedText)
   markdown.value = before + newText + after
 
   nextTick(() => {
-    editor.value!.focus()
     if (!selectedText) {
       // move cursor between the symbols
       const cursorPos = start + (type == SymbolType.ALIGNCENTER ? 1 : type.toString().length)
@@ -114,6 +130,7 @@ const apply = (type: SymbolType) => {
     } else {
       editor.value!.setSelectionRange(start, start + newText.length)
     }
+    editor.value!.focus()
   })
 }
 
@@ -123,30 +140,10 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
 </script>
 
 <template>
-  <!-- <div class="toolbar">
-    <div class="tools">
-      <button @click="apply(SymbolType.BOLD)">Bold</button>
-      <button>Italic</button>
-    </div>
-    <button @click="toggleMode">Preview</button>
-  </div> -->
-  <MarkdownEditorTools
-    @formatter="(type: SymbolType) => apply(type)"
-    @align="(type: SymbolType) => apply(type)"
-    @preview="toggleMode"
-    :is-preview="isPreview"
-  />
-  <textarea
-    v-if="!isPreview"
-    ref="editor"
-    name="editor"
-    id="editor"
-    v-model="markdown"
-    @input="onChange"
-    @change="onChange"
-    @keyup="onKeyUp"
-    @keypress="onKeyPress"
-  ></textarea>
+  <MarkdownEditorTools @formatter="(type: SymbolType) => apply(type)" @align="(type: SymbolType) => apply(type)"
+    @preview="toggleMode" :is-preview="isPreview" />
+  <textarea v-if="!isPreview" ref="editor" name="editor" id="editor" v-model="markdown" @input="onChange"
+    @change="onChange" @keyup="onKeyUp" @keypress="onKeyPress"></textarea>
   <div v-else id="preview" ref="preview"></div>
 </template>
 
@@ -165,8 +162,21 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
 #preview {
   word-break: break-all;
 
+  :deep(ul) {
+    list-style: unset;
+    display: unset;
+    list-style-position: inside;
+  }
+
+  :deep(ol) {
+    padding: unset;
+    margin: unset;
+    display: unset;
+    list-style-position: inside;
+  }
+
   :deep(p) {
-    margin: 8px 0;
+    min-height: 1.25em;
 
     strong * {
       font-weight: bold;
@@ -188,21 +198,6 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
       color: $link-color;
       text-decoration: underline;
     }
-  }
-}
-
-.toolbar {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .tools {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
   }
 }
 </style>

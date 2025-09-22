@@ -4,6 +4,10 @@ import { parseImageMarkdown } from './MarkdownExpressions'
 
 export enum SymbolType {
   PARAGRAPH,
+  UNORDERED_LIST,
+  ORDERED_LIST,
+  UNORDERED_LIST_ITEM = 'uli',
+  ORDERED_LIST_ITEM = 'oli',
   HEADONE = '#',
   HEADTWO = '##',
   HEADTHREE = '###',
@@ -20,13 +24,12 @@ export enum SymbolType {
   ALIGNJUSTIFY = '>=',
   IMAGE = '![alt](url)',
   LINK = '[text](url)',
-  UNORDEREDLIST = '- ',
-  ORDEREDLIST = '1. ',
   QUOTE = '> ',
   CODE = '```',
 }
 
 enum HorizontalPosition {
+  NONE,
   LEFT = 'left',
   CENTER = 'center',
   RIGHT = 'right',
@@ -40,15 +43,18 @@ interface LineWrapper {
   width?: number
   height?: number
   horizontal?: HorizontalPosition
-  children?: LineWrapper
+  children?: LineWrapper[]
+  before?: LineWrapper
+  after?: LineWrapper
 }
 
 export async function formatter(value: string[]): Promise<HTMLElement[]> {
+  const list = transformBruteLinesToWrapperList(value)
+
   return Promise.all(
-    value
-      .map((v) => getWrapperByLine(v))
-      .map((w) => (w != null ? getElementByWrapper(w) : null))
-      .filter((w) => w != null),
+    // value
+    //   .map((v) => transformLineToWrapper(v))
+    list.map((w) => (w != null ? trasformWrapperToElement(w) : null)).filter((w) => w != null),
   ) as Promise<HTMLElement[]>
 }
 
@@ -65,9 +71,17 @@ export function formatterParagraphs(value: string): string {
     .replace(MarkdownRegex.multipleSpaces, (match) => '&nbsp;'.repeat(match.length))
     .replace(MarkdownRegex.code, '<code>$1</code>')
     .replace(MarkdownRegex.link, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(MarkdownRegex.line, '<hr/>')
 }
 
-async function getElementByWrapper(wrapper: LineWrapper): Promise<HTMLElement> {
+export function formatterUnorderedList(value: string): string {
+  if (!value) return ''
+  const items = value.split(/\r?\n/).map((item) => item.replace(/^-+\s*/, '').trim())
+  const listItems = items.map((item) => `<li>${formatterParagraphs(item)}</li>`).join('')
+  return `<ul>${listItems}</ul>`
+}
+
+async function trasformWrapperToElement(wrapper: LineWrapper): Promise<HTMLElement> {
   const currentElement = createElementBySymbol(wrapper.symbol)
 
   if (wrapper.symbol === SymbolType.IMAGE && wrapper.url) {
@@ -96,7 +110,11 @@ async function getElementByWrapper(wrapper: LineWrapper): Promise<HTMLElement> {
   }
 
   if (wrapper.children) {
-    currentElement.appendChild(await getElementByWrapper(wrapper.children))
+    await Promise.all(
+      wrapper.children.map(async (child) => {
+        currentElement.appendChild(await trasformWrapperToElement(child))
+      }),
+    )
   }
 
   return currentElement
@@ -120,54 +138,242 @@ function createElementBySymbol(symbol: SymbolType): HTMLElement {
       const img = document.createElement('img')
       img.setAttribute('style', 'max-width: 100%; ')
       return img
+    case SymbolType.ORDERED_LIST:
+      return document.createElement('ol')
+    case SymbolType.UNORDERED_LIST:
+      return document.createElement('ul')
+    case SymbolType.ORDERED_LIST_ITEM:
+    case SymbolType.UNORDERED_LIST_ITEM:
+      return document.createElement('li')
     case SymbolType.PARAGRAPH:
     default:
       return document.createElement('p')
   }
 }
 
-function getWrapperByLine(value: string): LineWrapper | null {
-  if (!value.trim()) return null // ignora linhas vazias
+function transformBruteLinesToWrapperList(value: string[]): LineWrapper[] {
+  const elements: LineWrapper[] = []
+  let buffer: LineWrapper[] = []
 
-  let wrapper: LineWrapper | null = null
+  console.log('Quantidade de linhas: ', value.length)
 
-  const horizontalPosition = getHorizontalPosition(value)
+  let counter = 0
+  while (counter < value.length) {
+    let line = value[counter]
+    let wrapper: LineWrapper | null = null
 
-  value = cleanHorizontalMarkers(value, horizontalPosition)
+    const horizontalPosition = getHorizontalPosition(line)
+    line = cleanHorizontalMarkers(line, horizontalPosition)
 
-  const imageMatch = parseImageMarkdown(value)
+    const imageMatch = parseImageMarkdown(line)
 
-  if (imageMatch) {
-    const img = {
-      symbol: SymbolType.IMAGE,
-      text: imageMatch.alt,
-      url: imageMatch.url,
-      alt: imageMatch.alt,
-      horizontal: horizontalPosition,
-    } as LineWrapper
+    console.log('Linha: ', line)
 
-    const width = imageMatch.width
-    const height = imageMatch.height
+    if (isAListItem(line)) {
+      const containItem = buffer.length > 0
+      const containsAListUnordered = containItem
+        ? buffer[0].symbol == SymbolType.UNORDERED_LIST_ITEM
+        : false
 
-    if (width) img.width = width
-    if (height) img.height = height
+      if (isAUnorderedListItem(line) && containItem && containsAListUnordered) {
+        wrapper = {
+          symbol: SymbolType.UNORDERED_LIST_ITEM,
+          text: formatterParagraphs(line.replace(/^-\s+/, '')),
+        }
+        buffer.push(wrapper)
+        counter++
+        continue
+      } else if (isAOrderedListItem(line) && containItem && !containsAListUnordered) {
+        wrapper = {
+          symbol: SymbolType.ORDERED_LIST_ITEM,
+          text: formatterParagraphs(line.replace(/^\s*\d+[\.\)]\s+/, '')),
+        }
+        buffer.push(wrapper)
+        counter++
+        continue
+      } else if (containItem) {
+        wrapper = {
+          symbol:
+            buffer[0].symbol == SymbolType.UNORDERED_LIST_ITEM
+              ? SymbolType.UNORDERED_LIST
+              : SymbolType.ORDERED_LIST,
+          text: '',
+          children: Object.assign(buffer),
+        }
 
-    return img
-  } else if (isAHeading(value)) {
-    return {
-      symbol: getSymbolTypeFromHeading(value)!,
-      text: value.replace(/^(#{1,6})\s+/, ''),
-      horizontal: horizontalPosition,
+        elements.push(wrapper)
+
+        buffer = []
+
+        wrapper = {
+          symbol: isAUnorderedListItem(line)
+            ? SymbolType.UNORDERED_LIST_ITEM
+            : SymbolType.ORDERED_LIST_ITEM,
+          text: isAUnorderedListItem(line)
+            ? formatterParagraphs(line.replace(/^-\s+/, ''))
+            : formatterParagraphs(line.replace(/^\s*\d+[\.\)]\s+/, '')),
+        }
+
+        buffer.push(wrapper)
+
+        counter++
+        continue
+      } else {
+        wrapper = {
+          symbol: isAUnorderedListItem(line)
+            ? SymbolType.UNORDERED_LIST_ITEM
+            : SymbolType.ORDERED_LIST_ITEM,
+          text: isAUnorderedListItem(line)
+            ? formatterParagraphs(line.replace(/^-\s+/, ''))
+            : formatterParagraphs(line.replace(/^\s*\d+[\.\)]\s+/, '')),
+        }
+        buffer.push(wrapper)
+
+        counter++
+        continue
+      }
+    } else if (buffer.length > 0) {
+      const wrapper = {
+        symbol:
+          buffer[0].symbol == SymbolType.UNORDERED_LIST_ITEM
+            ? SymbolType.UNORDERED_LIST
+            : SymbolType.ORDERED_LIST,
+        text: '',
+        horizontal: HorizontalPosition.LEFT,
+        children: Object.assign(buffer),
+      }
+
+      buffer = []
+
+      elements.push(wrapper)
     }
-  } else {
-    wrapper = { symbol: SymbolType.PARAGRAPH, text: value, horizontal: horizontalPosition }
+
+    if (imageMatch) {
+      const img = {
+        symbol: SymbolType.IMAGE,
+        text: imageMatch.alt,
+        url: imageMatch.url,
+        alt: imageMatch.alt,
+        horizontal: horizontalPosition,
+      } as LineWrapper
+
+      const width = imageMatch.width
+      const height = imageMatch.height
+
+      if (width) img.width = width
+      if (height) img.height = height
+
+      wrapper = img
+    } else if (isAHeading(line)) {
+      wrapper = {
+        symbol: getSymbolTypeFromHeading(line)!,
+        text: line.replace(/^(#{1,6})\s+/, ''),
+        horizontal: horizontalPosition,
+      }
+    } else {
+      wrapper = { symbol: SymbolType.PARAGRAPH, text: line, horizontal: horizontalPosition }
+    }
+
+    elements.push(wrapper)
+
+    counter++
   }
 
-  return wrapper
+  if (buffer.length > 0) {
+    const wrapper = {
+      symbol:
+        buffer[0].symbol == SymbolType.UNORDERED_LIST_ITEM
+          ? SymbolType.UNORDERED_LIST
+          : SymbolType.ORDERED_LIST,
+      text: '',
+      horizontal: HorizontalPosition.LEFT,
+      children: Object.assign(buffer),
+    }
+
+    buffer = []
+
+    elements.push(wrapper)
+  }
+
+  console.log('elements: ', elements)
+
+  return elements
 }
+
+// function transformLineToWrapper(value: string, before?: LineWrapper): LineWrapper | null {
+//   //if (!value.trim()) return null // ignora linhas vazias
+
+//   let wrapper: LineWrapper | null = null
+
+//   const horizontalPosition = getHorizontalPosition(value)
+
+//   value = cleanHorizontalMarkers(value, horizontalPosition)
+
+//   const imageMatch = parseImageMarkdown(value)
+
+//   if (imageMatch) {
+//     const img = {
+//       symbol: SymbolType.IMAGE,
+//       text: imageMatch.alt,
+//       url: imageMatch.url,
+//       alt: imageMatch.alt,
+//       horizontal: horizontalPosition,
+//     } as LineWrapper
+
+//     const width = imageMatch.width
+//     const height = imageMatch.height
+
+//     if (width) img.width = width
+//     if (height) img.height = height
+
+//     return img
+//   } else if (isAHeading(value)) {
+//     return {
+//       symbol: getSymbolTypeFromHeading(value)!,
+//       text: value.replace(/^(#{1,6})\s+/, ''),
+//       horizontal: horizontalPosition,
+//     }
+//   } else if (isAUnorderedListItem(value)) {
+//     const listItemText = value.replace(/^-\s+/, '')
+
+//     if (before && before.symbol === SymbolType.UNORDERED_LIST_ITEM) {
+//       // Continua a lista existente
+//       return {
+//         symbol: SymbolType.UNORDERED_LIST_ITEM,
+//         text: '',
+//         horizontal: horizontalPosition,
+//         children: { symbol: SymbolType.PARAGRAPH, text: listItemText },
+//         before: before,
+//       }
+//     }
+
+//     return {
+//       symbol: SymbolType.UNORDERED_LIST_ITEM,
+//       text: '',
+//       horizontal: horizontalPosition,
+//       children: { symbol: SymbolType.PARAGRAPH, text: listItemText },
+//     }
+//   } else {
+//     wrapper = { symbol: SymbolType.PARAGRAPH, text: value, horizontal: horizontalPosition }
+//   }
+
+//   return wrapper
+// }
 
 function isAHeading(value: string): boolean {
   return /^#{1,6}\s+(.+)/.test(value.trim())
+}
+
+function isAListItem(value: string): boolean {
+  return isAOrderedListItem(value) || isAUnorderedListItem(value)
+}
+
+function isAUnorderedListItem(value: string): boolean {
+  return /^-\s+(.+)/.test(value.trim())
+}
+
+function isAOrderedListItem(value: string): boolean {
+  return /^\s*\d+[\.\)]\s+/.test(value.trim())
 }
 
 function getSymbolTypeFromHeading(value: string): SymbolType | null {
