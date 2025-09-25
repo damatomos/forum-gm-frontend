@@ -18,6 +18,12 @@ const preview = ref<HTMLDivElement>()
 
 const isPreview = ref<boolean>(false)
 
+defineEmits<{
+  (event: 'change', e: Event): void,
+  (event: 'input', e: Event): void,
+  (event: 'blur', e: Event): void
+}>()
+
 onMounted(() => { })
 
 const onChange = (event: Event) => {
@@ -103,9 +109,9 @@ const apply = (type: SymbolType) => {
 
   // if (start == end) return
 
-  const selectedText = markdown.value!.slice(start, end)
-  const before = markdown.value!.slice(0, start)
-  const after = markdown.value!.slice(end)
+  const selectedText = markdown.value ? markdown.value!.slice(start, end) : ''
+  const before = markdown.value ? markdown.value!.slice(0, start) : ''
+  const after = markdown.value ? markdown.value!.slice(end) : ''
   let newText = removeIfDontUse(before, after, type)!
 
   if (newText !== null) {

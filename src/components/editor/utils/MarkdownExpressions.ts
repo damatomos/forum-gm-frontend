@@ -20,6 +20,7 @@ export function removeMarkdownSyntaxBetweenText(
 }
 
 export function convertTextToMarkdownFormat(type: SymbolType, text: string): string {
+  console.log("Type: ", type, " text: ", text)
   if (isAlignType(type)) {
     return convertAlignTextToMarkdownFormat(type, text)
   } else if (isTextType(type)) {

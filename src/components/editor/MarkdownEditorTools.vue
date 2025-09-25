@@ -12,6 +12,7 @@ import TextUnderlineIcon from '../icons/TextUnderlineIcon.vue'
 import UnorderListIcon from '../icons/UnorderListIcon.vue'
 import { SymbolType } from './utils/MarkdownFormatter'
 import gsap from 'gsap'
+import LinkIcon from '../icons/LinkIcon.vue'
 
 interface ToolbarEmitter {
   (e: 'formatter', type: SymbolType): void
@@ -112,7 +113,11 @@ onBeforeUnmount(() => {
           <NumberOrderListIcon />
         </span>
       </div>
-      <!-- <div class="others tool-list"></div> -->
+      <div class="others tool-list">
+        <span class="tool link" @click="emit('formatter', SymbolType.LINK)">
+          <LinkIcon />
+        </span>
+      </div>
     </div>
 
     <button :class="'btn-preview ' + (props.isPreview ? 'enabled' : '')" @click="emit('preview')">
