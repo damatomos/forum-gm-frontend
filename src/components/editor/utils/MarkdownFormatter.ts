@@ -70,7 +70,9 @@ export function formatterParagraphs(value: string): string {
     .replace(MarkdownRegex.breakline, '<br />')
     .replace(MarkdownRegex.multipleSpaces, (match) => '&nbsp;'.repeat(match.length))
     .replace(MarkdownRegex.code, '<code>$1</code>')
-    .replace(MarkdownRegex.link, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(MarkdownRegex.link, (_match, p1, p2) => {
+      return `<a href="${p2}" target="_blank" rel="noopener">${p1 && p1.length > 0 ? p1 : p2}</a>`
+    })
     .replace(MarkdownRegex.line, '<hr/>')
 }
 

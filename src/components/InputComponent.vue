@@ -1,15 +1,24 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 interface Props {
   width?: string | number
   label?: string
   id?: string
-  variant?: 'auth' | 'send' | 'common-number' | 'common' | 'topic-title'
+  variant?: 'auth' | 'send' | 'common-number' | 'common' | 'topic-title' | 'small' | 'small-underline'
   placeholder?: string
   maxLength?: number | string
   type?: HTMLInputElement['type']
 }
 
-defineEmits(['change', 'input', 'blur'])
+const emit = defineEmits(['change', 'input', 'blur', 'keyupEnter'])
+
+const inputEl = ref<HTMLInputElement | null>(null)
+
+defineExpose({
+  focus: () => inputEl.value?.focus(),
+  el: inputEl // caso queira manipular direto
+})
 
 const model = defineModel<string>()
 const props = withDefaults(defineProps<Props>(), {
@@ -21,12 +30,12 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <label :for="props.id" :class="{ 'label-auth': props.variant == 'auth' }">{{
+  <label v-if="props.label" :for="props.id" :class="{ 'label-auth': props.variant == 'auth' }">{{
     props.label
-  }}</label>
+    }}</label>
   <div class="container-input" :style="{ width: `${props.width}px` || '100%' }">
     <input v-model="model" :class="[props.variant]" :type="type" :placeholder="placeholder" :maxlength="maxLength"
-      :id="props.id" />
+      :id="props.id" ref="inputEl"  @keyup.enter="(e) => emit('keyupEnter', e)" v-bind="$attrs"/>
     <img v-if="props.variant === 'send'" src="/icons/PaperPlaneRight.svg" alt="button push" />
     <span v-if="props.variant === 'common-number'">{{ model!.length }}/{{ maxLength }}</span>
   </div>
@@ -90,6 +99,30 @@ label {
     position: absolute;
     bottom: 0;
     right: 0.625rem;
+  }
+
+  .small {
+    font-size: $font-size-base;
+    max-height: 30px;
+    padding: 0.5rem 1rem;
+    background-color: $gm-c-white;
+    border: none;
+  }
+
+
+  .small-underline {
+    font-size: $font-size-base;
+    max-height: 30px;
+    padding: 0.5rem 1rem;
+    background-color: $gm-c-white;
+    border-radius: 0;
+    border: none;
+    transition: all 0.2s linear;
+
+    &:hover, &:focus {
+      // border-bottom: 1px solid $gm-c-divider-light-1;
+      box-shadow: 0 1px 0 0 $gm-c-divider-light-1;
+    }
   }
 
   .topic-title {

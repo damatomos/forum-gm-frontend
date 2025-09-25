@@ -17,6 +17,7 @@ $gm-c-blue: #3b82f6;
 $gm-c-blue-soft: #e9eaf4;
 
 $gm-c-red: #d97c8a;
+$gm-c-red-light: #F3A2AF;
 $gm-c-red-dark: #c56271;
 
 $gm-c-pink: #ffc4cd;
@@ -41,6 +42,12 @@ $gm-c-purple-polygon: #8b6d9c;
 $gm-c-blue-polygon: #676c9f;
 
 // Theme Variables
+$primary : $gm-c-red;
+$primary-hover : $gm-c-red-light;
+
+$secondary : $gm-c-purple;
+$secondary-hover : $gm-c-purple-light;
+
 $color-background: $gm-c-white-soft;
 
 $color-border: $gm-c-divider-light-1;
