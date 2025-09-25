@@ -19,7 +19,7 @@ export function removeMarkdownSyntaxBetweenText(
   return before + after === currentText ? null : before + after
 }
 
-export function convertTextToMarkdownFormat(type: SymbolType, text: string): string {
+export function convertTextToMarkdownFormat(type: SymbolType, text: string, url?: string): string {
   console.log("Type: ", type, " text: ", text)
   if (isAlignType(type)) {
     return convertAlignTextToMarkdownFormat(type, text)
@@ -34,12 +34,12 @@ export function convertTextToMarkdownFormat(type: SymbolType, text: string): str
       if (MarkdownRegex.link.test(text)) {
         return text.replace(MarkdownRegex.link, '$1')
       }
-      return `[${text}](url)`
+      return `[${text}](${url})`
     } else if (type == SymbolType.IMAGE) {
       if (MarkdownRegex.image.test(text)) {
         return text.replace(MarkdownRegex.image, '$1')
       }
-      return `![${text}](url)`
+      return `![${text}](${url})`
     }
   }
 

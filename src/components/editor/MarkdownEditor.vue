@@ -101,7 +101,7 @@ const updatePreview = async () => {
   }
 }
 
-const apply = (type: SymbolType) => {
+const apply = (type: SymbolType, url?: string) => {
   if (!editor.value) return
 
   const start = editor.value.selectionStart
@@ -125,13 +125,19 @@ const apply = (type: SymbolType) => {
     return
   }
 
-  newText = convertTextToMarkdownFormat(type, selectedText)
+  if (type === SymbolType.LINK)
+  {
+    console.log("text: ", url, "selected: ", selectedText)
+    newText = convertTextToMarkdownFormat(type, selectedText, url ?? '')
+  } else {
+    newText = convertTextToMarkdownFormat(type, selectedText)
+  }
   markdown.value = before + newText + after
 
   nextTick(() => {
     if (!selectedText) {
       // move cursor between the symbols
-      const cursorPos = start + (type == SymbolType.ALIGNCENTER ? 1 : type.toString().length)
+      const cursorPos = start + getCharactersOffsetOfCursor(type, newText.length ?? 0)
       editor.value!.setSelectionRange(cursorPos, cursorPos)
     } else {
       editor.value!.setSelectionRange(start, start + newText.length)
@@ -140,13 +146,20 @@ const apply = (type: SymbolType) => {
   })
 }
 
+const getCharactersOffsetOfCursor = (type: SymbolType, textLenght: number): number =>
+{
+  const isALinkOrImage = (type == SymbolType.LINK || type == SymbolType.IMAGE)
+  const isAlignCenter = type == SymbolType.ALIGNCENTER
+  return isALinkOrImage ? textLenght : isAlignCenter ? 1 : type.toString().length
+}
+
 const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
   return removeMarkdownSyntaxBetweenText(before, after, type)
 }
 </script>
 
 <template>
-  <MarkdownEditorTools @formatter="(type: SymbolType) => apply(type)" @align="(type: SymbolType) => apply(type)"
+  <MarkdownEditorTools @formatter="(type: SymbolType, url?: string) => apply(type, url)" @align="(type: SymbolType) => apply(type)"
     @preview="toggleMode" :is-preview="isPreview" />
   <textarea v-if="!isPreview" ref="editor" name="editor" id="editor" v-model="markdown" @input="onChange"
     @change="onChange" @keyup="onKeyUp" @keypress="onKeyPress"></textarea>

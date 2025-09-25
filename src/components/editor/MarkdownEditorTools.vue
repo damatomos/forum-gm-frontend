@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import AlignCenterIcon from '../icons/AlignCenterIcon.vue'
 import AlignJustifyIcon from '../icons/AlignJustifyIcon.vue'
 import AlignLeftIcon from '../icons/AlignLeftIcon.vue'
@@ -13,9 +13,10 @@ import UnorderListIcon from '../icons/UnorderListIcon.vue'
 import { SymbolType } from './utils/MarkdownFormatter'
 import gsap from 'gsap'
 import LinkIcon from '../icons/LinkIcon.vue'
+import LinkInputBox from '@/components/editor/LinkInputBox.vue'
 
 interface ToolbarEmitter {
-  (e: 'formatter', type: SymbolType): void
+  (e: 'formatter', type: SymbolType, text?: string): void
   (e: 'align', type: SymbolType): void
   (e: 'preview'): void
 }
@@ -23,6 +24,8 @@ interface ToolbarEmitter {
 interface MarkdownEditorToolsProps {
   isPreview: boolean
 }
+
+const linkOpen = ref<boolean>(false)
 
 const emit = defineEmits<ToolbarEmitter>()
 const props = defineProps<MarkdownEditorToolsProps>()
@@ -114,7 +117,7 @@ onBeforeUnmount(() => {
         </span>
       </div>
       <div class="others tool-list">
-        <span class="tool link" @click="emit('formatter', SymbolType.LINK)">
+        <span class="tool link" @click="{ console.log(linkOpen); linkOpen = true }">
           <LinkIcon />
         </span>
       </div>
@@ -123,6 +126,9 @@ onBeforeUnmount(() => {
     <button :class="'btn-preview ' + (props.isPreview ? 'enabled' : '')" @click="emit('preview')">
       Preview
     </button>
+  </div>
+  <div class="externals">
+    <LinkInputBox @click="(value : string ) => emit('formatter', SymbolType.LINK, value)" v-model:opened="linkOpen" />
   </div>
 </template>
 
@@ -212,5 +218,10 @@ onBeforeUnmount(() => {
     }
   }
 
+}
+
+.externals {
+  position: relative;
+  width: 100%;
 }
 </style>
