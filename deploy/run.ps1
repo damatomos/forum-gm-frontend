@@ -46,10 +46,11 @@ Set-Location ".gh-pages"
 git add .
 git commit -m "Deploy build" 
 git push origin gh-pages --force
-Set-Location $PWD
+Set-Location ".."
 
 # Remove worktree local (opcional)
 Write-Host "🧹 Removendo worktree local..."
 git worktree remove ".gh-pages"
+git branch -D ".gh-pages"
 
 Write-Host "Deploy concluído!"
