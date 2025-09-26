@@ -1,3 +1,4 @@
+import type { Options } from '../MarkdownEditor.vue'
 import { SymbolType } from './MarkdownFormatter'
 import { MarkdownRegex } from './MarkdownRegex'
 
@@ -19,8 +20,12 @@ export function removeMarkdownSyntaxBetweenText(
   return before + after === currentText ? null : before + after
 }
 
-export function convertTextToMarkdownFormat(type: SymbolType, text: string, url?: string): string {
-  console.log("Type: ", type, " text: ", text)
+export function convertTextToMarkdownFormat(
+  type: SymbolType,
+  text: string,
+  options?: Options,
+): string {
+  console.log('Type: ', type, ' text: ', text)
   if (isAlignType(type)) {
     return convertAlignTextToMarkdownFormat(type, text)
   } else if (isTextType(type)) {
@@ -34,12 +39,12 @@ export function convertTextToMarkdownFormat(type: SymbolType, text: string, url?
       if (MarkdownRegex.link.test(text)) {
         return text.replace(MarkdownRegex.link, '$1')
       }
-      return `[${text}](${url})`
+      return `[${text}](${options?.url})`
     } else if (type == SymbolType.IMAGE) {
       if (MarkdownRegex.image.test(text)) {
         return text.replace(MarkdownRegex.image, '$1')
       }
-      return `![${text}](${url})`
+      return `![${text}](${options?.url})${options?.width || options?.height ? `{${options.width?.toString() != "NaN" ? options.width : ''},${options?.height?.toString() != "NaN" ? options.height : ''}}` : ''}`
     }
   }
 
