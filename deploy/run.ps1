@@ -51,6 +51,6 @@ Set-Location ".."
 # Remove worktree local (opcional)
 Write-Host "🧹 Removendo worktree local..."
 git worktree remove ".gh-pages"
-git branch -D ".gh-pages"
+git branch -D "gh-pages"
 
 Write-Host "Deploy concluído!"
