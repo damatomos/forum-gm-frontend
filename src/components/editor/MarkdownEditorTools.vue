@@ -14,9 +14,12 @@ import { SymbolType } from './utils/MarkdownFormatter'
 import gsap from 'gsap'
 import LinkIcon from '../icons/LinkIcon.vue'
 import LinkInputBox from '@/components/editor/LinkInputBox.vue'
+import ImageIcon from '../icons/ImageIcon.vue'
+import ImageInputBox from './ImageInputBox.vue'
+import type { Options } from './MarkdownEditor.vue'
 
 interface ToolbarEmitter {
-  (e: 'formatter', type: SymbolType, text?: string): void
+  (e: 'formatter', type: SymbolType, options?: Options): void
   (e: 'align', type: SymbolType): void
   (e: 'preview'): void
 }
@@ -25,7 +28,8 @@ interface MarkdownEditorToolsProps {
   isPreview: boolean
 }
 
-const linkOpen = ref<boolean>(false)
+const linkBoxOpen = ref<boolean>(false)
+const imageBoxOpen = ref<boolean>(false)
 
 const emit = defineEmits<ToolbarEmitter>()
 const props = defineProps<MarkdownEditorToolsProps>()
@@ -117,8 +121,11 @@ onBeforeUnmount(() => {
         </span>
       </div>
       <div class="others tool-list">
-        <span class="tool link" @click="{ console.log(linkOpen); linkOpen = true }">
+        <span class="tool link" @click="{ linkBoxOpen = true ;}">
           <LinkIcon />
+        </span>
+        <span class="tool image" @click="{ imageBoxOpen = true; }">
+          <ImageIcon />
         </span>
       </div>
     </div>
@@ -128,7 +135,8 @@ onBeforeUnmount(() => {
     </button>
   </div>
   <div class="externals">
-    <LinkInputBox @click="(value : string ) => emit('formatter', SymbolType.LINK, value)" v-model:opened="linkOpen" />
+    <LinkInputBox @click="(value : string ) => emit('formatter', SymbolType.LINK, { url: value})" v-model:opened="linkBoxOpen" />
+    <ImageInputBox @click="(value : string, width?: number, height?: number ) => emit('formatter', SymbolType.IMAGE, {url: value, width, height})" v-model:opened="imageBoxOpen" />
   </div>
 </template>
 

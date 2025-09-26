@@ -12,6 +12,13 @@ import {
   removeMarkdownSyntaxBetweenText,
 } from './utils/MarkdownExpressions'
 
+export interface Options
+{
+  url?: string
+  width?: number
+  height?: number
+}
+
 const editor = ref<HTMLTextAreaElement>()
 const markdown = defineModel<string>()
 const preview = ref<HTMLDivElement>()
@@ -101,7 +108,7 @@ const updatePreview = async () => {
   }
 }
 
-const apply = (type: SymbolType, url?: string) => {
+const apply = (type: SymbolType, options?: Options) => {
   if (!editor.value) return
 
   const start = editor.value.selectionStart
@@ -127,8 +134,11 @@ const apply = (type: SymbolType, url?: string) => {
 
   if (type === SymbolType.LINK)
   {
-    console.log("text: ", url, "selected: ", selectedText)
-    newText = convertTextToMarkdownFormat(type, selectedText, url ?? '')
+    console.log("options: ", options, "selected: ", selectedText)
+    newText = convertTextToMarkdownFormat(type, selectedText, options)
+  } else if (type === SymbolType.IMAGE) {
+    console.log("image options: ", options, "selected: ", selectedText)
+    newText = convertTextToMarkdownFormat(type, selectedText, options)
   } else {
     newText = convertTextToMarkdownFormat(type, selectedText)
   }
@@ -159,7 +169,7 @@ const removeIfDontUse = (before: string, after: string, type: SymbolType) => {
 </script>
 
 <template>
-  <MarkdownEditorTools @formatter="(type: SymbolType, url?: string) => apply(type, url)" @align="(type: SymbolType) => apply(type)"
+  <MarkdownEditorTools @formatter="(type: SymbolType, options?: Options) => apply(type, options)" @align="(type: SymbolType) => apply(type)"
     @preview="toggleMode" :is-preview="isPreview" />
   <textarea v-if="!isPreview" ref="editor" name="editor" id="editor" v-model="markdown" @input="onChange"
     @change="onChange" @keyup="onKeyUp" @keypress="onKeyPress"></textarea>
