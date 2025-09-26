@@ -1,0 +1,1 @@
+import{_ as e,c as o,o as t,b as c}from"./index-AaTP5_Gj.js";const a={},r={ref:"title"};function s(n,_){return t(),o("main",null,[c("h1",r,"ProfileView",512)])}const i=e(a,[["render",s],["__scopeId","data-v-9bdad61f"]]);export{i as default};
